@@ -1,0 +1,15 @@
+{
+  "name": "trellodashboard",
+  "version": "1.0.0",
+  "description": "A Dashboard for real-time-projects in Trello",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "cd client && npm install && npm run build"
+  },
+  "author": "Finn Cyriax",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
