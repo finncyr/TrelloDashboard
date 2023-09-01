@@ -8,8 +8,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 const PORT = process.env.PORT || 3001;
 
-const URL = "https://trello.com/b/W3JXKZYD/test.json";
-const boardid = "5f07168df739986764e3405c";
+const URL = "https://trello.com/b/W3JXKZYD/test";
+let boardid = "5f07168df739986764e3405c";
 
 var trello = new Trello(process.env.POWER_UP_API_KEY, process.env.POWER_UP_TOKEN);
 
@@ -18,13 +18,18 @@ const app = express();
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 
-// Handle GET requests to /api route
-app.get("/api/title", (req, res) => {
-  res.json({ message: "SAMPLE PROJECT" });
+// TODO: Fix Handling, returns "undefined"
+app.post("/api/setboard", (req, res) => {
+  console.log(req.body);
+  console.log(JSON.parse(req.body));
+  res.json(req.body);
 });
 
-app.get("/api/json", (req, res) => {
-  res.redirect(URL);
+// Get title from Board-URL
+//HACK: Only Works with full url, not short version
+app.get("/api/title", (req, res) => {
+  var URLsplit = URL.split("/");
+  res.json({message: URLsplit[URLsplit.length - 1]});
 });
 
 // /api/counts/opentasks
