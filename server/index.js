@@ -27,6 +27,27 @@ app.get("/api/json", (req, res) => {
   res.redirect(URL);
 });
 
+// /api/counts/opentasks
+app.get("/api/counts/opentasks", (req, res) => {
+  trello.getListsOnBoard(boardid)
+    .then((lists) => {
+      const list = lists.filter(function(el){
+        return el.name == "DONE";
+      });
+
+      trello.getCardsOnList(list[0]['id'])
+        .then((cards) => {
+          res.json(cards.length);
+        });
+    });
+});
+
+// Returns count of all tasks
+app.get("/api/counts/alltasks", (req, res) => {
+  trello.getCardsOnBoard(boardid)
+    .then((cards) => res.json(cards.length));
+});
+
 // --- TESTING ---
 
 app.get("/api/test/trello", (req, res) => {
