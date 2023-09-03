@@ -64,11 +64,19 @@ app.get("/api/counts/alltasks", (req, res) => {
     .then((cards) => res.json(cards.length));
 });
 
+// ---- CARDS ----
+
+app.get("/api/cards", (req, res) => {
+  trello.getCardsOnBoard(boardid)
+    .then((cards) => res.json(cards));
+});
+
 app.get("/api/cards/:cardid", (req, res) => {
   trello.getCard(boardid, req.params.cardid)
     .then((card) => res.json(card));
 });
 
+// Returns the Duration of a Task in Minutes
 app.get("/api/cards/:cardid/duration", (req, res) => {
   trello.getLabelsForBoard(boardid)
   .then((durations) => {
@@ -84,7 +92,7 @@ app.get("/api/cards/:cardid/duration", (req, res) => {
   });
 });
 
-// --- TESTING ---
+// ---- TESTING ----
 
 app.get("/api/test/trello", (req, res) => {
   trello.getCardsOnBoard(boardid)
@@ -100,12 +108,14 @@ app.get("/api/test/alltasks", (req, res) => {
   ).then((data) => res.json(data.length));
 });
 
+// --------------------
+
 // All other GET requests not handled before will return our React app
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
-//------------------------
+// Listen Routine
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
