@@ -43,6 +43,8 @@ app.get("/api/title", (req, res) => {
   res.json({message: URLsplit[URLsplit.length - 1]});
 });
 
+// ---- COUNTS ----
+
 // /api/counts/opentasks
 app.get("/api/counts/opentasks", (req, res) => {
   trello.getListsOnBoard(boardid)
@@ -90,6 +92,20 @@ app.get("/api/cards/:cardid/duration", (req, res) => {
       }
     });
   });
+});
+
+// ---- METRICS ----
+
+app.get("/api/metrics/spi", (req, res) => {
+  //TODO SPI Metric
+});
+
+app.get("/api/metrics/sv", (req, res) => {
+  //TODO SV Metric
+});
+
+app.get("/api/metrics/ru", (req, res) => {
+  //TODO RU Metric
 });
 
 // ---- TESTING ----
