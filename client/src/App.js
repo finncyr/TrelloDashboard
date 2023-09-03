@@ -4,6 +4,7 @@ import React from "react";
 import ProgressBlock from "./components/ProgressBlock.js";
 import "./App.css";
 import URLPostInput from "./components/URLPostInput.js";
+import SPIMiniBlock from "./components/SPIMiniBlock.js";
 
 function App() {
   const [tr_title, setTr_title] = React.useState(null);
@@ -23,6 +24,7 @@ function App() {
       </div>
       <ProgressBlock />
       <URLPostInput />
+      <SPIMiniBlock />
     </div>
 
   );
