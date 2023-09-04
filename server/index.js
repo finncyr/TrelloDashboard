@@ -94,6 +94,14 @@ app.get("/api/cards/:cardid/duration", (req, res) => {
   });
 });
 
+// Returns the due time of a card in UNIX-Timecode
+app.get("/api/cards/:cardid/due", (req, res) => {
+  trello.getCard(boardid, req.params.cardid)
+    .then((card) => {
+      res.json(Date.parse(card['due']));
+    });
+});
+
 // ---- METRICS ----
 
 app.get("/api/metrics/spi", (req, res) => {
