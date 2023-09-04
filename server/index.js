@@ -52,7 +52,7 @@ app.get("/api/counts/opentasks", (req, res) => {
       const list = lists.filter(function(el){
         return el.name == "DONE";
       });
-
+      //FIXME: This returns the done task, not the open ones!
       trello.getCardsOnList(list[0]['id'])
         .then((cards) => {
           res.json(cards.length);
@@ -110,6 +110,22 @@ app.get("/api/metrics/spi", (req, res) => {
 
 app.get("/api/metrics/sv", (req, res) => {
   //TODO SV Metric
+  trello.getListsOnBoard(boardid)
+    .then((alllists) => {
+      let opentasks = [];
+      const lists = alllists.filter(function(el){
+        return el.name != "DONE";
+      });
+      for(var list of lists) {
+        trello.getCardsForList(list['id'])
+        .then((cards) => {
+          cards.forEach(el => {
+            opentasks.push(el);
+          });
+        });
+      }
+      //TODO: opentasks is empty here. Need to find a wait function
+    });    
 });
 
 app.get("/api/metrics/ru", (req, res) => {
