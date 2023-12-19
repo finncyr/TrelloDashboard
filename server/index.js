@@ -112,18 +112,25 @@ app.get("/api/metrics/sv", (req, res) => {
   //TODO SV Metric
   trello.getListsOnBoard(boardid)
     .then((alllists) => {
-      let opentasks = [];
-      const lists = alllists.filter(function(el){
-        return el.name != "DONE";
+      const lists = alllists.filter(function(el){ //get all lists
+        return el.name != "DONE";                 //except the DONE List
       });
-      for(var list of lists) {
-        trello.getCardsForList(list['id'])
+      var opentasks = [];
+      var i = 0;
+      for (var list of lists) {
+        trello.getCardsForList(list['id'])        //get all cards from the list
         .then((cards) => {
           cards.forEach(el => {
-            opentasks.push(el);
-          });
+            opentasks.push(el);                   //and push them in this array
+            if(i === lists.length - 1) {
+              console.log(i);
+              res.json(opentasks);
+            } 
+          });                
         });
+        i++;
       }
+      //console.log(opentasks);
       //TODO: opentasks is empty here. Need to find a wait function
     });    
 });
@@ -135,8 +142,8 @@ app.get("/api/metrics/ru", (req, res) => {
 // ---- TESTING ----
 
 app.get("/api/test/trello", (req, res) => {
-  trello.getCardsOnBoard(boardid)
-    .then((cards) => res.json(cards.length));
+  trello.getCardsOnBoardWithExtraParams(boardid, "{filter: { dueComplete: false }}")
+  .then((cards) => res.json(cards));
 });
 
 app.get("/api/test/alltasks", (req, res) => {
