@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server/index.js",
     "build": "cd client && npm install && npm run build",
-    "bunbuild": "cd client && bun run build"
+    "bunbuild": "cd client && bun run build",
+    "swagger": "node ./swagger.js"
   },
   "author": "Finn Cyriax",
   "license": "MIT",
@@ -14,5 +15,8 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "trello": "^0.11.0"
+  },
+  "devDependencies": {
+    "swagger-autogen": "^2.23.7"
   }
 }
