@@ -168,25 +168,32 @@ app.get("/api/lists/:listid/sv", (req, res) => {
 
 // Returns the summed Schedule Variance of the whole board in minutes
 app.get("/api/board/sv", (req, res) => {
-  trello.getLabelsForBoard(boardid)
+  trello.getLabelsForBoard(boardid)  //load all required data
   .then((durations) => {
-    trello.getCardsOnBoard(boardid)
-      .then((cards) => {
-        var sv = 0;
-        cards.forEach(el => {
-          if(el['idList'] != "648efa75bb6b1dac303d8ce0"){ //FIXME: This is the hardcoded ID of the DONE List
-            var cardduaration = 0;
-            for(var label of el['labels']){
-              const dur_label = durations.filter(function (duration) {
-                return duration['id'] == label['id'];
-              });
-              cardduaration = parseInt(dur_label[0]['name']);
-              break;
+    trello.getListsOnBoard(boardid)
+    .then((alllists) => {
+      trello.getCardsOnBoard(boardid)
+        .then((cards) => {
+          var sv = 0;
+          const donelist = alllists.filter(function(el){
+            return el.name == "DONE";
+          });
+          const donelistid = donelist[0]['id']; //get id of done list
+          cards.forEach(el => {
+            if(el['idList'] != donelistid){ //ignore cards in done list
+              var cardduaration = 0;
+              for(var label of el['labels']){
+                const dur_label = durations.filter(function (duration) { //get duration of card by label
+                  return duration['id'] == label['id'];
+                });
+                cardduaration = parseInt(dur_label[0]['name']);
+                break;
+              }
+              sv += (Date.parse(el['due']) - cardduaration * 60000) - Date.now(); //calculate sv
             }
-            sv += (Date.parse(el['due']) - cardduaration * 60000) - Date.now();
-          }
+          });
+          res.json(Math.round(sv/60000)); //return sv in minutes
         });
-        res.json(Math.round(sv/60000));
       });
     });
 });
