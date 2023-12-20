@@ -102,6 +102,95 @@ app.get("/api/cards/:cardid/due", (req, res) => {
     });
 });
 
+// Returns the overtime of a card in UNIX-Timecode
+// Negative Values mean the card is overdue by that amount of milliseconds
+app.get("/api/cards/:cardid/overdue", (req, res) => {
+  trello.getCard(boardid, req.params.cardid)
+    .then((card) => {
+      res.json((Date.parse(card['due']) - Date.now()));
+    });
+});
+
+// ---- LISTS ----
+
+// Returns all overtimed cards on a list
+app.get("/api/lists/:listid/overtimed", (req, res) => {
+  trello.getCardsOnList(req.params.listid)
+    .then((cards) => {
+      var overtimed = [];
+      cards.forEach(el => {
+        if(Date.parse(el['due']) < Date.now()) {
+          overtimed.push(el);
+        }
+      });
+      res.json(overtimed);
+    });
+});
+
+// Returns true if any card on a list is overtimed
+app.get("/api/lists/:listid/anyovertimed", (req, res) => {
+  trello.getCardsOnList(req.params.listid)
+    .then((cards) => {
+      var overtimed = false;
+      cards.forEach(el => {
+        if(Date.parse(el['due']) < Date.now()) {
+          overtimed = true;
+        }
+      });
+      res.json(overtimed);
+    });
+});
+
+// Returns the summed Schedule Variance of a list in minutes
+app.get("/api/lists/:listid/sv", (req, res) => {
+  trello.getLabelsForBoard(boardid)
+  .then((durations) => {
+    trello.getCardsOnList(req.params.listid)
+      .then((cards) => {
+        var sv = 0;
+        cards.forEach(el => {
+          var cardduaration = 0;
+          for(var label of el['labels']){
+            const dur_label = durations.filter(function (duration) {
+              return duration['id'] == label['id'];
+            });
+            cardduaration = parseInt(dur_label[0]['name']);
+            break;
+          }
+          sv += (Date.parse(el['due']) - cardduaration * 60000) - Date.now();
+        });
+        res.json(Math.round(sv/60000));
+      });
+    });
+});
+
+// ---- BOARD ----
+
+// Returns the summed Schedule Variance of the whole board in minutes
+app.get("/api/board/sv", (req, res) => {
+  trello.getLabelsForBoard(boardid)
+  .then((durations) => {
+    trello.getCardsOnBoard(boardid)
+      .then((cards) => {
+        var sv = 0;
+        cards.forEach(el => {
+          if(el['idList'] != "648efa75bb6b1dac303d8ce0"){ //FIXME: This is the hardcoded ID of the DONE List
+            var cardduaration = 0;
+            for(var label of el['labels']){
+              const dur_label = durations.filter(function (duration) {
+                return duration['id'] == label['id'];
+              });
+              cardduaration = parseInt(dur_label[0]['name']);
+              break;
+            }
+            sv += (Date.parse(el['due']) - cardduaration * 60000) - Date.now();
+          }
+        });
+        res.json(Math.round(sv/60000));
+      });
+    });
+});
+
 // ---- METRICS ----
 
 app.get("/api/metrics/spi", (req, res) => {
