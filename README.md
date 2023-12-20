@@ -19,3 +19,7 @@ $ npm run start
 ```
 $ npm run build
 ```
+
+### Progress
+
+![Screenshot of early development](image.png)

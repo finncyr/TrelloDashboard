@@ -169,11 +169,12 @@
 }
 ._1-2 {
   color: #1bae18;
-  text-align: left;
+  text-align: center;
   font: 600 32px "Inter", sans-serif;
   position: absolute;
-  left: 44px;
+  left: 0px;
   top: 75px;
+  width: 132px;
 }
 .ru-mini-block {
   width: 132px;
@@ -195,8 +196,9 @@
   text-align: center;
   font: 600 32px "Inter", sans-serif;
   position: absolute;
-  left: calc(50% - 35px);
+  left: 0px;
   top: 75px;
+  width: 132px;
 }
 .vector {
   position: absolute;
