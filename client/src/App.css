@@ -643,6 +643,11 @@
   left: 513px;
   top: 130px;
   overflow: hidden;
+  display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    justify-content: space-evenly;
 }
 .property-1-a {
   background: #d9d9d9;

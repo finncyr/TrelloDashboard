@@ -63,19 +63,22 @@ app.get("/api/counts/opentasks", (req, res) => {
 // Returns count of all tasks
 app.get("/api/counts/alltasks", (req, res) => {
   trello.getCardsOnBoard(boardid)
-    .then((cards) => res.json(cards.length));
+    .then((cards) => res.json(cards.length))
+    .catch((err) => next(err));
 });
 
 // ---- CARDS ----
 
 app.get("/api/cards", (req, res) => {
   trello.getCardsOnBoard(boardid)
-    .then((cards) => res.json(cards));
+    .then((cards) => res.json(cards))
+    .catch((err) => next(err));
 });
 
-app.get("/api/cards/:cardid", (req, res) => {
+app.get("/api/cards/:cardid", (req, res, next) => {
   trello.getCard(boardid, req.params.cardid)
-    .then((card) => res.json(card));
+    .then((card) => res.json(card))
+    .catch((err) => next(err));
 });
 
 // Returns the Duration of a Task in Minutes
@@ -90,8 +93,10 @@ app.get("/api/cards/:cardid/duration", (req, res) => {
         });
         res.json(parseInt(dur_label[0]['name']));
       }
-    });
-  });
+    })
+    .catch((err) => next(err));
+  })
+  .catch((err) => next(err));
 });
 
 // Returns the due time of a card in UNIX-Timecode
@@ -99,7 +104,8 @@ app.get("/api/cards/:cardid/due", (req, res) => {
   trello.getCard(boardid, req.params.cardid)
     .then((card) => {
       res.json(Date.parse(card['due']));
-    });
+    })
+    .catch((err) => next(err));
 });
 
 // Returns the overtime of a card in UNIX-Timecode
@@ -108,6 +114,21 @@ app.get("/api/cards/:cardid/overdue", (req, res) => {
   trello.getCard(boardid, req.params.cardid)
     .then((card) => {
       res.json((Date.parse(card['due']) - Date.now()));
+    })
+    .catch((err) => next(err));
+});
+
+// Returns an array of all timecards
+app.get("/api/timecards", (req, res) => {
+  trello.getCardsOnBoard(boardid)
+    .then((cards) => {
+      var timecards = [];
+      cards.forEach(el => {
+        if(el['name'] == "TIMECARD") {
+          timecards.push(el);
+        }
+      });
+      res.json(timecards);
     });
 });
 
@@ -124,7 +145,8 @@ app.get("/api/lists/:listid/overtimed", (req, res) => {
         }
       });
       res.json(overtimed);
-    });
+    })
+    .catch((err) => next(err));
 });
 
 // Returns true if any card on a list is overtimed
@@ -138,7 +160,8 @@ app.get("/api/lists/:listid/anyovertimed", (req, res) => {
         }
       });
       res.json(overtimed);
-    });
+    })
+    .catch((err) => next(err));
 });
 
 // Returns the summed Schedule Variance of a list in minutes
@@ -160,8 +183,10 @@ app.get("/api/lists/:listid/sv", (req, res) => {
           sv += (Date.parse(el['due']) - cardduaration * 60000) - Date.now();
         });
         res.json(Math.round(sv/60000));
-      });
-    });
+      })
+      .catch((err) => next(err));
+    })
+    .catch((err) => next(err));
 });
 
 // ---- BOARD ----
@@ -193,53 +218,24 @@ app.get("/api/board/sv", (req, res) => {
             }
           });
           res.json(Math.round(sv/60000)); //return sv in minutes
-        });
-      });
-    });
+        })
+        .catch((err) => next(err));
+      })
+      .catch((err) => next(err));
+    })
+    .catch((err) => next(err));
 });
 
-// ---- METRICS ----
+//TODO: Implement RU and SPI Metrics
 
-app.get("/api/metrics/spi", (req, res) => {
-  //TODO SPI Metric
-});
 
-app.get("/api/metrics/sv", (req, res) => {
-  //TODO SV Metric
-  trello.getListsOnBoard(boardid)
-    .then((alllists) => {
-      const lists = alllists.filter(function(el){ //get all lists
-        return el.name != "DONE";                 //except the DONE List
-      });
-      var opentasks = [];
-      var i = 0;
-      for (var list of lists) {
-        trello.getCardsForList(list['id'])        //get all cards from the list
-        .then((cards) => {
-          cards.forEach(el => {
-            opentasks.push(el);                   //and push them in this array
-            if(i === lists.length - 1) {
-              console.log(i);
-              res.json(opentasks);
-            } 
-          });                
-        });
-        i++;
-      }
-      //console.log(opentasks);
-      //TODO: opentasks is empty here. Need to find a wait function
-    });    
-});
-
-app.get("/api/metrics/ru", (req, res) => {
-  //TODO RU Metric
-});
 
 // ---- TESTING ----
 
 app.get("/api/test/trello", (req, res) => {
   trello.getCardsOnBoardWithExtraParams(boardid, "{filter: { dueComplete: false }}")
-  .then((cards) => res.json(cards));
+  .then((cards) => res.json(cards))
+  .catch((err) => next(err));
 });
 
 app.get("/api/test/alltasks", (req, res) => {
@@ -248,7 +244,8 @@ app.get("/api/test/alltasks", (req, res) => {
       console.log(`Response: ${response.status} ${response.statusText}`);
       return response.json();
     }
-  ).then((data) => res.json(data.length));
+  ).then((data) => res.json(data.length))
+  .catch((err) => next(err));
 });
 
 // --------------------

@@ -7,6 +7,8 @@ import URLPostInput from "./components/URLPostInput.js";
 import SPIMiniBlock from "./components/SPIMiniBlock.js";
 import SVMiniBlock from "./components/SVMiniBlock.js";
 import RUMiniBlock from "./components/RUMiniBlock.js";
+import ZoneBlock from "./components/ZoneBlock.js";
+import TaskBlock from "./components/TaskBlock.js";
 
 function App() {
   const [tr_title, setTr_title] = React.useState(null);
@@ -24,12 +26,18 @@ function App() {
         <div class="trello-dash">TrelloDash</div>
         <div class="project-abcd">{!tr_title ? "No Project found!" : "Project: " + tr_title}</div>
       </div>
-      <ProgressBlock />
-      <URLPostInput />
-      <SPIMiniBlock />
-      <SVMiniBlock />
-      <RUMiniBlock />
-    </div>
+        <ProgressBlock />
+        <URLPostInput />
+        <SPIMiniBlock />
+        <SVMiniBlock />
+        <RUMiniBlock />
+        <div className="zone-holder">
+          <div className="border"></div>
+          <div className="zones">Zones</div>
+        </div>
+        <ZoneBlock />
+        <TaskBlock />
+      </div>
 
   );
 }

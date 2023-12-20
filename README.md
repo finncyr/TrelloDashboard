@@ -23,3 +23,4 @@ $ npm run build
 ### Progress
 
 ![Screenshot of early development](image.png)
+![Full Layout](image-1.png)
