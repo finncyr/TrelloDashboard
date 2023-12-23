@@ -7,6 +7,8 @@ const Trello = require("trello");
 const dotenv = require('dotenv');
 const { brotliCompress } = require("zlib");
 const { toUSVString } = require("util");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../swagger-output.json');
 
 // Configuartions
 dotenv.config();
@@ -27,6 +29,9 @@ let boardid = "5f07168df739986764e3405c"; //global id of current trello board
 
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, '../client/build')));
+
+// server Swagger-Docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 // TODO: Fix Handling, returns "undefined"
@@ -131,6 +136,8 @@ app.get("/api/timecards", (req, res) => {
       res.json(timecards);
     });
 });
+
+//TODO: Get users + Time available from timecards
 
 // ---- LISTS ----
 
