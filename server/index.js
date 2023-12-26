@@ -136,20 +136,6 @@ app.get("/api/cards/:cardid/overdue", (req, res) => {
     .catch((err) => next(err));
 });
 
-// Returns an array of all timecards
-app.get("/api/timecards", (req, res) => {
-  trello.getCardsOnBoard(boardid)
-    .then((cards) => {
-      var timecards = [];
-      cards.forEach(el => {
-        if(el['name'].includes("TIMECARD")) {
-          timecards.push(el);
-        }
-      });
-      res.json(timecards);
-    });
-});
-
 // ---- LISTS ----
 
 // Returns all overtimed cards on a list
@@ -244,6 +230,51 @@ app.get("/api/board/sv", (req, res) => {
     .catch((err) => next(err));
 });
 
+app.get("/api/board/ru", (req, res, next) => {
+  trello.getLabelsForBoard(boardid)  //load all required data
+  .then((durations) => {
+    trello.getListsOnBoard(boardid)
+    .then((alllists) => {
+      trello.getBoardMembers(boardid)
+      .then((members) => {
+        trello.getCardsOnBoard(boardid)
+          .then((cards) => {
+            var ru = 0;
+            const donelist = alllists.filter(function(el){
+              return el.name == "DONE";
+            });
+            const donelistid = donelist[0]['id']; //get id of done list
+            var timeplanned = 0;
+            var timeavailable = 0;
+            cards.forEach(el => {
+              if(el['idList'] != donelistid){ //ignore cards in done list
+                for(var label of el['labels']){
+                  const dur_label = durations.filter(function (duration) { //get duration of card by label
+                    return duration['id'] == label['id'];
+                  });
+                  timeplanned += parseInt(dur_label[0]['name']);
+                  break;
+                }
+              }
+              else if(el['name'].includes("TIMECARD")) {
+                members.forEach(member => {
+                  if(el['idMembers'].includes(member['id'])) {
+                    timeavailable += parseInt(el['desc']);
+                  }
+                });
+              }
+            });
+            res.json(timeplanned / timeavailable); //return ru in percent
+          })
+          .catch((err) => next(err));
+        })
+      .catch((err) => next(err));
+    })
+    .catch((err) => next(err));
+  })
+  .catch((err) => next(err));
+});
+
 //TODO: Implement RU and SPI Metrics
 
 // ---- MEMBERS ----
@@ -278,7 +309,7 @@ app.get("/api/members/:memberid/availabletime", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-// ---- TIMEMEMBERS ----
+// ---- TIMEVALUES ----
 
 app.get("/api/timemembers", (req, res, next) => {
   trello.getBoardMembers(boardid)
@@ -307,6 +338,56 @@ app.get("/api/timemembers", (req, res, next) => {
   })
   .catch((err) => next(err));
 });
+
+// Returns an array of all timecards
+app.get("/api/timecards", (req, res) => {
+  trello.getCardsOnBoard(boardid)
+    .then((cards) => {
+      var timecards = [];
+      cards.forEach(el => {
+        if(el['name'].includes("TIMECARD")) {
+          timecards.push(el);
+        }
+      });
+      res.json(timecards);
+    });
+});
+
+app.get("/api/timeplanned", (req, res, next) => {
+  trello.getLabelsForBoard(boardid)  //load all required data
+  .then((durations) => {
+    trello.getListsOnBoard(boardid)
+    .then((alllists) => {
+      trello.getCardsOnBoard(boardid)
+        .then((cards) => {
+          var plannedtime = 0;
+          const donelist = alllists.filter(function(el){
+            return el.name == "DONE";
+          });
+          const donelistid = donelist[0]['id']; //get id of done list
+          cards.forEach(el => {
+            if(el['idList'] != donelistid && !el['name'].includes("TIMECARD")){ //ignore cards in done list
+              var cardduaration = 0;
+              for(var label of el['labels']){
+                const dur_label = durations.filter(function (duration) { //get duration of card by label
+                  return duration['id'] == label['id'];
+                });
+                cardduaration = parseInt(dur_label[0]['name']);
+                break;
+              }
+              plannedtime += cardduaration; 
+            }
+          });
+          res.json(plannedtime); //return planned time in minutes
+        })
+        .catch((err) => next(err));
+      })
+      .catch((err) => next(err));
+    })
+    .catch((err) => next(err));
+});
+
+
 
 // --------------------
 
