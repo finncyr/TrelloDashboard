@@ -196,7 +196,7 @@ app.get("/api/lists/:listid/sv", (req, res) => {
 // ---- BOARD ----
 
 // Returns the summed Schedule Variance of the whole board in minutes
-app.get("/api/board/sv", (req, res) => {
+app.get("/api/board/sv", (req, res, next) => {
   trello.getLabelsForBoard(boardid)  //load all required data
   .then((durations) => {
     trello.getListsOnBoard(boardid)
@@ -275,7 +275,45 @@ app.get("/api/board/ru", (req, res, next) => {
   .catch((err) => next(err));
 });
 
-//TODO: Implement SPI Metric
+app.get("/api/board/spi", (req, res, next) => {
+  trello.getLabelsForBoard(boardid)  //load all required data
+  .then((durations) => {
+    trello.getListsOnBoard(boardid)
+    .then((alllists) => {
+      trello.getCardsOnBoard(boardid)
+        .then((cards) => {
+          var donetime = 0;
+          var timeplanned = 0;
+
+          const donelist = alllists.filter(function(el){
+            return el.name == "DONE";
+          });
+          const donelistid = donelist[0]['id']; //get id of done list
+
+          cards.forEach(card => {
+            if((Date.parse(card['due']) - Date.now()) <= 0 && !card['name'].includes("TIMECARD")){ //if card is due and not a timecard
+              var cardduaration = 0;
+              for(var label of card['labels']){
+                const dur_label = durations.filter(function (duration) { //get duration of card by label
+                  return duration['id'] == label['id'];
+                });
+                cardduaration = parseInt(dur_label[0]['name']);
+                break;
+              }
+              if(card['idList'] == donelistid){ //if card is in done list
+                donetime += cardduaration;
+              }
+              timeplanned += cardduaration;
+            }
+          });
+          res.json(donetime / timeplanned); //return spi (Efficiency)
+        })
+        .catch((err) => next(err));
+      })
+      .catch((err) => next(err));
+    })
+    .catch((err) => next(err));
+});
 
 // ---- MEMBERS ----
 

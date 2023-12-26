@@ -25,7 +25,7 @@ $ npm run build
 ![Version 0.2.0](image-2.png)
 
 <details>
-    <summary>Earlier stagees</summary> 
+    <summary>Earlier stages</summary> 
 
 #### v0.1.0
 ![Screenshot of early development](image.png)
