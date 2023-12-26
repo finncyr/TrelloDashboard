@@ -171,6 +171,68 @@ app.get("/api/cards/:cardid/overdue", (req, res) => {
 
 // ---- LISTS ----
 
+app.get("/api/lists", (req, res, next) => {
+  trello.getListsOnBoard(boardid)
+    .then((lists) => {
+      res.json(lists);
+    })
+    .catch((err) => next(err));
+});
+
+app.get("/api/lists/:listid", (req, res, next) => {
+  trello.getCardsForList(req.params.listid)
+    .then((list) => {
+      res.json(list);
+    })
+    .catch((err) => next(err));
+});
+
+app.get("/api/lists/:listid/name", (req, res, next) => {
+  trello.getListsOnBoard(boardid)
+    .then((lists) => {
+      const list = lists.filter(function(el){
+        return el['id'] == req.params.listid;
+      });
+      res.json(list[0]['name']);
+    })
+    .catch((err) => next(err));
+});
+
+app.get("/api/lists/:listid/countall", (req, res, next) => {
+  trello.getCardsOnList(req.params.listid)
+    .then((cards) => {
+      res.json(cards.length);
+    })
+    .catch((err) => next(err));
+});
+
+app.get("/api/lists/:listid/countclosed", (req, res, next) => {
+  trello.getCardsOnList(req.params.listid)
+    .then((cards) => {
+      var closed = 0;
+      cards.forEach(el => {
+        if(el['dueComplete']) {
+          closed++;
+        }
+      });
+      res.json(closed);
+    })
+    .catch((err) => next(err));
+});
+
+app.get("/api/lists/:listid/members", (req, res, next) => {
+  trello.getCardsOnList(req.params.listid)
+    .then((cards) => {
+      var members = [];
+      cards.forEach(el => {
+          members = members.concat(el['idMembers']);
+      });
+      res.json([...new Set(members)]);
+    })
+    .catch((err) => next(err));
+});
+
+
 // Returns all overtimed cards on a list
 app.get("/api/lists/:listid/overtimed", (req, res) => {
   trello.getCardsOnList(req.params.listid)
@@ -225,6 +287,8 @@ app.get("/api/lists/:listid/sv", (req, res) => {
     })
     .catch((err) => next(err));
 });
+
+
 
 // ---- BOARD ----
 
