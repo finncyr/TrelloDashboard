@@ -275,7 +275,7 @@ app.get("/api/board/ru", (req, res, next) => {
   .catch((err) => next(err));
 });
 
-//TODO: Implement RU and SPI Metrics
+//TODO: Implement SPI Metric
 
 // ---- MEMBERS ----
 
