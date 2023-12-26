@@ -7,6 +7,7 @@ function MemberBlock (props) {
         <>
         <div class="members">
             <div class="rectangle-2"></div>
+            <div class="member-title">Members</div>
         </div>
         </>
     )

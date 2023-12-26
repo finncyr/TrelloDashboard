@@ -39,7 +39,6 @@ function App() {
           <div className="zones">Zones</div>
         </div>
         <ZoneBlock />
-        <TaskBlock />
       </div>
 
   );
