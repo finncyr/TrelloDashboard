@@ -15,7 +15,7 @@ function RUMiniBlock (props) {
         <div class="ru-mini-block">
             <div class="rectangle-4"></div>
             <div class="ru">RU</div>
-            <div class="_86" style={{color: ru < 1 ? "#1bae18" : "#ae1818"}}>{Math.round(ru*100)}%</div>
+            <div class="_86" style={{color: ru > 1 ? "#ae1818" : (ru > 0.8 ? "#e9770f" : "#1bae18")}}>{Math.round(ru*100)}%</div>
         </div>
         </>
     )
