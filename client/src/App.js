@@ -10,6 +10,7 @@ import RUMiniBlock from "./components/RUMiniBlock.js";
 import ZoneBlock from "./components/ZoneBlock.js";
 import TaskBlock from "./components/TaskBlock.js";
 import MemberBlock from "./components/MemberBlock.js";
+import ZoneWrapper from "./components/ZoneWrapper.js";
 
 function App() {
   const [tr_title, setTr_title] = React.useState(null);
@@ -34,11 +35,8 @@ function App() {
         <RUMiniBlock />
         <MemberBlock />
 
-        <div className="zone-holder">
-          <div className="border"></div>
-          <div className="zones">Zones</div>
-        </div>
-        <ZoneBlock />
+        
+        <ZoneWrapper />
       </div>
 
   );

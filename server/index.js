@@ -180,11 +180,34 @@ app.get("/api/lists", (req, res, next) => {
 });
 
 app.get("/api/lists/:listid", (req, res, next) => {
-  trello.getCardsForList(req.params.listid)
-    .then((list) => {
-      res.json(list);
+  var listname = "";
+  var countall = 0;
+  var countclosed = 0;
+  var listmembers = [];
+
+  trello.getListsOnBoard(boardid)
+  .then((lists) => {
+      trello.getCardsOnList(req.params.listid)
+      .then((cards) => {
+        countall = cards.length;
+        const list = lists.filter(function(el){
+          return el['id'] == req.params.listid;
+        });
+        listname = list[0]['name'];
+        var members = [];
+        cards.forEach(el => {
+          if(el['dueComplete']) {
+            countclosed++;
+          }
+          members = members.concat(el['idMembers']);
+        });
+        listmembers = [...new Set(members)];
+
+        res.json({id: req.params.listid, name: listname, allcards: countall, closedcards: countclosed, listmembers: listmembers});
     })
     .catch((err) => next(err));
+  })
+  .catch((err) => next(err));
 });
 
 app.get("/api/lists/:listid/name", (req, res, next) => {
