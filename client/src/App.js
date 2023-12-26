@@ -9,6 +9,7 @@ import SVMiniBlock from "./components/SVMiniBlock.js";
 import RUMiniBlock from "./components/RUMiniBlock.js";
 import ZoneBlock from "./components/ZoneBlock.js";
 import TaskBlock from "./components/TaskBlock.js";
+import MemberBlock from "./components/MemberBlock.js";
 
 function App() {
   const [tr_title, setTr_title] = React.useState(null);
@@ -31,6 +32,8 @@ function App() {
         <SPIMiniBlock />
         <SVMiniBlock />
         <RUMiniBlock />
+        <MemberBlock />
+
         <div className="zone-holder">
           <div className="border"></div>
           <div className="zones">Zones</div>

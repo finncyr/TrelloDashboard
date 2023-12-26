@@ -51,24 +51,37 @@ app.get("/api/title", (req, res) => {
 // ---- COUNTS ----
 
 // /api/counts/opentasks
-app.get("/api/counts/opentasks", (req, res) => {
+app.get("/api/counts/opentasks", (req, res, next) => {
   trello.getListsOnBoard(boardid)
     .then((lists) => {
       const list = lists.filter(function(el){
         return el.name == "DONE";
       });
-      //FIXME: This returns the done task, not the open ones!
       trello.getCardsOnList(list[0]['id'])
         .then((cards) => {
-          res.json(cards.length);
+          var opentasks = 0;
+          cards.forEach(el => {
+            if(!(el['name'].includes("TIMECARD"))) {
+              opentasks++;
+            }
+          });
+          res.json(opentasks);
         });
     });
 });
 
 // Returns count of all tasks
-app.get("/api/counts/alltasks", (req, res) => {
+app.get("/api/counts/alltasks", (req, res, next) => {
   trello.getCardsOnBoard(boardid)
-    .then((cards) => res.json(cards.length))
+    .then((cards) => {
+      var alltasks = 0;
+      cards.forEach(el => {
+        if(!(el['name'].includes("TIMECARD"))) {
+          alltasks++;
+        }
+      });
+      res.json(alltasks);
+    })
     .catch((err) => next(err));
 });
 
