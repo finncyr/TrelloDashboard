@@ -207,7 +207,7 @@
         }
       }
     },
-    "/api/test/trello": {
+    "/api/members": {
       "get": {
         "description": "",
         "responses": {
@@ -217,7 +217,43 @@
         }
       }
     },
-    "/api/test/alltasks": {
+    "/api/members/{memberid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "memberid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/members/{memberid}/availabletime": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "memberid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/timemembers": {
       "get": {
         "description": "",
         "responses": {

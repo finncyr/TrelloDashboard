@@ -129,15 +129,13 @@ app.get("/api/timecards", (req, res) => {
     .then((cards) => {
       var timecards = [];
       cards.forEach(el => {
-        if(el['name'] == "TIMECARD") {
+        if(el['name'].includes("TIMECARD")) {
           timecards.push(el);
         }
       });
       res.json(timecards);
     });
 });
-
-//TODO: Get users + Time available from timecards
 
 // ---- LISTS ----
 
@@ -235,23 +233,65 @@ app.get("/api/board/sv", (req, res) => {
 
 //TODO: Implement RU and SPI Metrics
 
+// ---- MEMBERS ----
 
-
-// ---- TESTING ----
-
-app.get("/api/test/trello", (req, res) => {
-  trello.getCardsOnBoardWithExtraParams(boardid, "{filter: { dueComplete: false }}")
-  .then((cards) => res.json(cards))
-  .catch((err) => next(err));
+app.get("/api/members", (req, res, next) => {
+  trello.getBoardMembers(boardid)
+    .then((members) => {
+      res.json(members);
+    })
+    .catch((err) => next(err));
 });
 
-app.get("/api/test/alltasks", (req, res) => {
-  fetch("https://api.trello.com/1/boards/" + boardid + "/cards?key=" + process.env.POWER_UP_API_KEY + "&token=" + process.env.POWER_UP_TOKEN)
-    .then((response) => {
-      console.log(`Response: ${response.status} ${response.statusText}`);
-      return response.json();
-    }
-  ).then((data) => res.json(data.length))
+app.get("/api/members/:memberid", (req, res, next) => {
+  trello.getMember(req.params.memberid)
+    .then((member) => {
+      res.json(member);
+    })
+    .catch((err) => next(err));
+});
+
+app.get("/api/members/:memberid/availabletime", (req, res, next) => {
+  trello.getMemberCards(req.params.memberid)
+    .then((cards) => {
+      var availabletime = 0;
+      cards.forEach(el => {
+        if(el['name'].includes("TIMECARD")) {
+          availabletime += parseInt(el['desc']);
+        }
+      });
+      res.json(availabletime);
+    })
+    .catch((err) => next(err));
+});
+
+// ---- TIMEMEMBERS ----
+
+app.get("/api/timemembers", (req, res, next) => {
+  trello.getBoardMembers(boardid)
+  .then((members) => {
+    trello.getCardsOnBoard(boardid)
+    .then((cards) => {
+      var timecards = [];
+      cards.forEach(el => {
+        if(el['name'].includes("TIMECARD")) {
+          timecards.push(el);
+        }
+      });
+      var timemembers = [];
+      members.forEach(el => {
+        var availabletime = 0;
+        timecards.forEach(card => {
+          if(card['idMembers'].includes(el['id'])) {
+            availabletime += parseInt(card['desc']);
+          }
+        });
+        timemembers.push({id: el['id'], fullName: el['fullName'], username: el['username'], availabletime: availabletime});
+      });
+      res.json(timemembers);
+    })
+    .catch((err) => next(err));
+  })
   .catch((err) => next(err));
 });
 
