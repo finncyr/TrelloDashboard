@@ -15,7 +15,7 @@ function ProgressBlock (props) {
   })
 
   React.useEffect(() => {
-    fetch("/api/counts/opentasks")
+    fetch("/api/counts/closedtasks")
       .then((res) => res.json())
       .then((opentasks) => setOpentasks(opentasks));
   })

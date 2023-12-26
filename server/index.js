@@ -53,34 +53,67 @@ app.get("/api/title", (req, res) => {
 // /api/counts/opentasks
 app.get("/api/counts/opentasks", (req, res, next) => {
   trello.getListsOnBoard(boardid)
-    .then((lists) => {
-      const list = lists.filter(function(el){
-        return el.name == "DONE";
-      });
-      trello.getCardsOnList(list[0]['id'])
-        .then((cards) => {
-          var opentasks = 0;
-          cards.forEach(el => {
-            if(!(el['name'].includes("TIMECARD"))) {
-              opentasks++;
-            }
-          });
-          res.json(opentasks);
+  .then((alllists) => {
+    trello.getCardsOnBoard(boardid)
+      .then((cards) => {
+        const infolist = alllists.filter(function(el){
+          return el.name == "INFO";
         });
-    });
+        const infolistid = infolist[0]['id']; //get id of done list
+        var opentasks = 0;
+        cards.forEach(el => {
+          if((el['idList'] != infolistid) && !el['dueComplete'] && el['due'] != null) { //ignore cards in info list & done cards
+            opentasks++;
+          }
+        });
+        res.json(opentasks);
+      })
+      .catch((err) => next(err));
+    })
+    .catch((err) => next(err));
+});
+
+app.get("/api/counts/closedtasks", (req, res, next) => {
+  trello.getListsOnBoard(boardid)
+  .then((alllists) => {
+    trello.getCardsOnBoard(boardid)
+      .then((cards) => {
+        const infolist = alllists.filter(function(el){
+          return el.name == "INFO";
+        });
+        const infolistid = infolist[0]['id']; //get id of done list
+        var closedtasks = 0;
+        cards.forEach(el => {
+          if((el['idList'] != infolistid) && el['dueComplete'] && el['due'] != null) { //ignore cards in info list & done cards
+            closedtasks++;
+          }
+        });
+        res.json(closedtasks);
+      })
+      .catch((err) => next(err));
+    })
+    .catch((err) => next(err));
 });
 
 // Returns count of all tasks
 app.get("/api/counts/alltasks", (req, res, next) => {
-  trello.getCardsOnBoard(boardid)
-    .then((cards) => {
-      var alltasks = 0;
-      cards.forEach(el => {
-        if(!(el['name'].includes("TIMECARD"))) {
-          alltasks++;
-        }
-      });
-      res.json(alltasks);
+  trello.getListsOnBoard(boardid)
+  .then((alllists) => {
+    trello.getCardsOnBoard(boardid)
+      .then((cards) => {
+        const infolist = alllists.filter(function(el){
+          return el.name == "INFO";
+        });
+        const infolistid = infolist[0]['id']; //get id of done list
+        var alltasks = 0;
+        cards.forEach(el => {
+          if((el['idList'] != infolistid)) { //ignore cards in info list
+            alltasks++;
+          }
+        });
+        res.json(alltasks);
+      })
+      .catch((err) => next(err));
     })
     .catch((err) => next(err));
 });
@@ -204,12 +237,12 @@ app.get("/api/board/sv", (req, res, next) => {
       trello.getCardsOnBoard(boardid)
         .then((cards) => {
           var sv = 0;
-          const donelist = alllists.filter(function(el){
-            return el.name == "DONE";
+          const infolist = alllists.filter(function(el){
+            return el.name == "INFO";
           });
-          const donelistid = donelist[0]['id']; //get id of done list
+          const infolistid = infolist[0]['id']; //get id of info list
           cards.forEach(el => {
-            if(el['idList'] != donelistid){ //ignore cards in done list
+            if(el['idList'] != infolistid && !el['dueComplete'] && el['due'] != null){ //ignore cards in info list and done cards
               var cardduaration = 0;
               for(var label of el['labels']){
                 const dur_label = durations.filter(function (duration) { //get duration of card by label
@@ -230,6 +263,7 @@ app.get("/api/board/sv", (req, res, next) => {
     .catch((err) => next(err));
 });
 
+// Returns the summed Resource Utilization of the whole board in decimal notation
 app.get("/api/board/ru", (req, res, next) => {
   trello.getLabelsForBoard(boardid)  //load all required data
   .then((durations) => {
@@ -240,14 +274,14 @@ app.get("/api/board/ru", (req, res, next) => {
         trello.getCardsOnBoard(boardid)
           .then((cards) => {
             var ru = 0;
-            const donelist = alllists.filter(function(el){
-              return el.name == "DONE";
+            const infolist = alllists.filter(function(el){
+              return el.name == "INFO";
             });
-            const donelistid = donelist[0]['id']; //get id of done list
+            const infolistid = infolist[0]['id']; //get id of info list
             var timeplanned = 0;
             var timeavailable = 0;
             cards.forEach(el => {
-              if(el['idList'] != donelistid){ //ignore cards in done list
+              if(el['idList'] != infolistid && !el['dueComplete'] && el['due'] != null){ //ignore cards in info list and done cards
                 for(var label of el['labels']){
                   const dur_label = durations.filter(function (duration) { //get duration of card by label
                     return duration['id'] == label['id'];
@@ -275,6 +309,7 @@ app.get("/api/board/ru", (req, res, next) => {
   .catch((err) => next(err));
 });
 
+// Returns the summed Schedule Performance Index of the whole board in decimal notation
 app.get("/api/board/spi", (req, res, next) => {
   trello.getLabelsForBoard(boardid)  //load all required data
   .then((durations) => {
@@ -285,13 +320,13 @@ app.get("/api/board/spi", (req, res, next) => {
           var donetime = 0;
           var timeplanned = 0;
 
-          const donelist = alllists.filter(function(el){
-            return el.name == "DONE";
+          const infolist = alllists.filter(function(el){
+            return el.name == "INFO";
           });
-          const donelistid = donelist[0]['id']; //get id of done list
+          const infolistid = infolist[0]['id']; //get id of done list
 
           cards.forEach(card => {
-            if((Date.parse(card['due']) - Date.now()) <= 0 && !card['name'].includes("TIMECARD")){ //if card is due and not a timecard
+            if((Date.parse(card['due']) - Date.now()) <= 0 && !card['name'].includes("TIMECARD") && card['idList'] != infolistid){ //if card is due and not a timecard
               var cardduaration = 0;
               for(var label of card['labels']){
                 const dur_label = durations.filter(function (duration) { //get duration of card by label
@@ -300,7 +335,7 @@ app.get("/api/board/spi", (req, res, next) => {
                 cardduaration = parseInt(dur_label[0]['name']);
                 break;
               }
-              if(card['idList'] == donelistid){ //if card is in done list
+              if(card['dueComplete']){ //if card is done
                 donetime += cardduaration;
               }
               timeplanned += cardduaration;
@@ -399,12 +434,12 @@ app.get("/api/timeplanned", (req, res, next) => {
       trello.getCardsOnBoard(boardid)
         .then((cards) => {
           var plannedtime = 0;
-          const donelist = alllists.filter(function(el){
-            return el.name == "DONE";
+          const infolist = alllists.filter(function(el){
+            return el.name == "INFO";
           });
-          const donelistid = donelist[0]['id']; //get id of done list
+          const infolistid = infolist[0]['id']; //get id of done list
           cards.forEach(el => {
-            if(el['idList'] != donelistid && !el['name'].includes("TIMECARD")){ //ignore cards in done list
+            if(el['idList'] != infolistid && !el['name'].includes("TIMECARD") && !el['dueComplete'] && el['due'] != null){ //ignore cards in info list and done cards
               var cardduaration = 0;
               for(var label of el['labels']){
                 const dur_label = durations.filter(function (duration) { //get duration of card by label
