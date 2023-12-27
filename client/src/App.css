@@ -1060,25 +1060,26 @@
   width: 887px;
   height: 238px;
   position: absolute;
-  overflow: auto;
   left: 503px;
   top: 464px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.rectangle-3 {
   background: #ffffff;
   border-radius: 10px;
   border-style: solid;
   border-color: #000000;
   border-width: 3px;
-  width: 887px;
-  height: 238px;
-  position: absolute;
-  left: 0px;
-  top: 0px;
 }
+.rectangle-3 {
+  width: 875px;
+  height: 170px;
+  position: absolute;
+  overflow-y: scroll;
+  left: 0px;
+  top: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 .tasks2 {
   color: #000000;
   text-align: left;
@@ -1182,8 +1183,8 @@
   height: 34px;
   position: relative;
   left: 30px;
-  top: 48px;
   overflow: hidden;
+  min-height: 34px;
 }
 .aufgabe-1-1-testbeschreibung {
   color: #000000;

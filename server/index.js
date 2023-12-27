@@ -191,6 +191,7 @@ app.get("/api/criticaltasks", (req, res, next) => {
                 name: el['name'], 
                 listname: listname, 
                 due: el['due'],
+                dueComplete: el['dueComplete'],
                 assignees: el['idMembers']
               });
             }

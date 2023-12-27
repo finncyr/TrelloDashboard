@@ -30,32 +30,63 @@ function TaskBlock (props) {
     return(
       <>
       <div class="tasks">
-        <div class="rectangle-3"></div>
         <div class="tasks2">Critical Tasks</div>
-        {tasks.map((task) => (
-          <div class="task">
-          <div class="aufgabe-1-1-testbeschreibung">
-            {task['name']}
-          </div>
-          <div class="frame-2">
-          {task['members'].map((member) => (
-              <img 
-                class="ellipse-15"
-                title={member['fullName']}
-                src={"https://gravatar.com/avatar/" + member['gravatarHash'] + "?d=retro"} />))}
-            <div class="zone-label2">
-              <div class="zone-a2">{task['listname']}</div>
+        <div class="rectangle-3">
+          {tasks.map((task) => (
+            <div class="task" style={{background: (((Date.parse(task['due']) - Date.now()) < 0) && !task['dueComplete'] ? "#fe9894" :(task['dueComplete'] ? "#a1cea5" : "#d9d9d9"))}}>
+            <div class="aufgabe-1-1-testbeschreibung" style={{textDecoration: task['dueComplete'] ? "line-through" : ""}}>
+              {task['name']}
             </div>
-            <div class="label-b2">
-              <div class="due-in-2-hours">due in 2 hours</div>
+            <div class="frame-2">
+            {task['members'].map((member) => (
+                <img 
+                  class="ellipse-15"
+                  title={member['fullName']}
+                  src={"https://gravatar.com/avatar/" + member['gravatarHash'] + "?d=retro"} />))}
+              <div class="zone-label2">
+                <div class="zone-a2">{task['listname']}</div>
+              </div>
+              <div class="label-b2">
+                <div class="due-in-2-hours">{timeStringUntilDue(task['due'], task['dueComplete'])}</div>
+              </div>
             </div>
           </div>
+          ))}
         </div>
-        ))}
-
       </div>
       </>
     )
+}
+
+function timeStringUntilDue(due, dueComplete) {
+  var now = new Date();
+  var dueDate = new Date(due);
+  var diff = dueDate - now;
+  var hours = Math.floor(diff / 1000 / 60 / 60);
+  var minutes = Math.floor(diff / 1000 / 60 - hours * 60);
+  var days = Math.floor(hours / 24);
+  var finalString = "";
+
+  if (dueComplete){
+    finalString = "completed";
+  }
+  else if (diff < 0){
+    finalString = "overdue";
+  }
+  else if (days > 0) {
+    finalString = "due in " + days + " days";
+  }
+  else if (hours > 0) {
+    finalString = "due in " + hours + " hours";
+  }
+  else if (minutes > 0) {
+    finalString = "due in " + minutes + " min";
+  }
+  else if (minutes == 0){
+    finalString = "due now";
+  }
+
+  return finalString;
 }
 
 export default TaskBlock;
