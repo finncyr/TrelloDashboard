@@ -12,6 +12,9 @@ function MemberBlock (props) {
                 fetch("/api/members/" + el['id'])
                 .then((res) => res.json())
                 .then((member) => {
+                    if(member['gravatarHash'] == null) {
+                        member['gravatarHash'] = member['id'];
+                      }
                     var combinedmember = {...member, availabletime: el['availabletime']};
                     setMembers(members => [...members, combinedmember]);
                 });
@@ -39,7 +42,7 @@ function MemberBlock (props) {
                             <img 
                                 class="ellipse-1"
                                 title={member['fullName']}
-                                src={"https://gravatar.com/avatar/" + member['gravatarHash']} />
+                                src={"https://gravatar.com/avatar/" + member['gravatarHash'] + "?d=retro"} />
                         </td>
                         <td class="member-name">{member['fullName']}</td>
                         <td class="member-time">{minToTime(member['availabletime'])}h</td>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {sha256} from 'crypto-hash';
 
 function TaskBlock (props) {
 
@@ -14,8 +15,11 @@ function TaskBlock (props) {
             fetch("/api/members/" + assignee)
             .then((res) => res.json())
             .then((member) => {
-              var combinedtask = {...el, members: [...members, member]};
-              setTasks(tasks => [...tasks, combinedtask]);
+                if(member['gravatarHash'] == null) {
+                  member['gravatarHash'] = member['id'];
+                }
+                var combinedtask = {...el, members: [...members, member]};
+                setTasks(tasks => [...tasks, combinedtask]);
             });
           });
       });
@@ -38,7 +42,7 @@ function TaskBlock (props) {
               <img 
                 class="ellipse-15"
                 title={member['fullName']}
-                src={"https://gravatar.com/avatar/" + member['gravatarHash']} />))}
+                src={"https://gravatar.com/avatar/" + member['gravatarHash'] + "?d=retro"} />))}
             <div class="zone-label2">
               <div class="zone-a2">{task['listname']}</div>
             </div>

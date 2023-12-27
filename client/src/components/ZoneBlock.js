@@ -28,7 +28,10 @@ function ZoneBlock (props) {
             fetch("/api/members/" + el)
             .then((res) => res.json())
             .then((member) => {
-                setMembers(members => [...members, member]);
+              if(member['gravatarHash'] == null) {
+                member['gravatarHash'] = member['id'];
+              }
+              setMembers(members => [...members, member]);
             });
         });
       });
@@ -55,7 +58,7 @@ function ZoneBlock (props) {
               <img 
                 class="ellipse-1"
                 title={member['fullName']}
-                src={"https://gravatar.com/avatar/" + member['gravatarHash']} />))}
+                src={"https://gravatar.com/avatar/" + member['gravatarHash'] + "?d=retro"} />))}
           </div>
           
           <div class="critical-task">
