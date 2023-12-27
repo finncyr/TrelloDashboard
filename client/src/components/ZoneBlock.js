@@ -7,11 +7,11 @@ function ZoneBlock (props) {
 
   const [allcards, setAllcards] = React.useState(0);
   const [closedcards, setClosedcards] = React.useState(0);
-  const [critical, setCritical] = React.useState(false);
-  const [ontime, setOntime] = React.useState(false);
   const [members, setMembers] = React.useState([]);
-
   const [maxwidth, setMaxwidth] = React.useState(0);
+  const [criticaltask, setCriticaltask] = React.useState(0);
+  const [criticalopen, setCriticalopen] = React.useState(0);
+
   const maxRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -20,6 +20,8 @@ function ZoneBlock (props) {
       .then((list) => {
           setAllcards(list['allcards']);
           setClosedcards(list['closedcards']);
+          setCriticaltask(list['criticaltask']);
+          setCriticalopen(list['criticalopen']);
           list['listmembers'].forEach(el => {
             fetch("/api/members/" + el)
             .then((res) => res.json())
@@ -53,23 +55,11 @@ function ZoneBlock (props) {
                 title={member['fullName']}
                 src={"https://gravatar.com/avatar/" + member['gravatarHash']} />))}
           </div>
+          
           <div class="critical-task">
-            <div class="rectangle-11"></div>
-            <div class="_1-critical-task-open">1 Critical Task open</div>
-            <svg
-              class="vector4"
-              width="21"
-              height="19"
-              viewBox="0 0 21 19"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M20.2749 15.8933C20.9158 17.0042 20.1113 18.3928 18.8313 18.3928H2.16855C0.886017 18.3928 0.0852531 17.002 0.724906 15.8933L9.05636 1.44786C9.69758 0.33644 11.3036 0.338454 11.9437 1.44786L20.2749 15.8933ZM10.5 12.9067C9.61789 12.9067 8.90279 13.6218 8.90279 14.5039C8.90279 15.3861 9.61789 16.1012 10.5 16.1012C11.3821 16.1012 12.0972 15.3861 12.0972 14.5039C12.0972 13.6218 11.3821 12.9067 10.5 12.9067ZM8.98358 7.16553L9.24115 11.8878C9.2532 12.1087 9.43591 12.2817 9.65719 12.2817H11.3428C11.5641 12.2817 11.7468 12.1087 11.7589 11.8878L12.0164 7.16553C12.0295 6.92685 11.8394 6.72616 11.6004 6.72616H9.39959C9.16056 6.72616 8.97056 6.92685 8.98358 7.16553Z"
-                fill="white"
-              />
-            </svg>
+            {criticalTaskBlock(criticaltask, criticalopen)}
           </div>
+
           <div class="on-time">
             <div class="rectangle-112"></div>
             <div class="tasks-on-time">Tasks on time</div>
@@ -90,6 +80,65 @@ function ZoneBlock (props) {
         </div>
         </>
     )
+}
+
+function criticalTaskBlock(criticaltask, criticalopen){
+  if(criticaltask > 0 && criticalopen > 0){
+    return(
+      <>
+        <div class="rectangle-11"></div>
+        <div class="_1-critical-task-open">{criticalopen} Critical Task open</div>
+        <svg
+          class="vector4" width="21" height="19" viewBox="0 0 21 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M20.2749 15.8933C20.9158 17.0042 20.1113 18.3928 18.8313 18.3928H2.16855C0.886017 18.3928 0.0852531 17.002 0.724906 15.8933L9.05636 1.44786C9.69758 0.33644 11.3036 0.338454 11.9437 1.44786L20.2749 15.8933ZM10.5 12.9067C9.61789 12.9067 8.90279 13.6218 8.90279 14.5039C8.90279 15.3861 9.61789 16.1012 10.5 16.1012C11.3821 16.1012 12.0972 15.3861 12.0972 14.5039C12.0972 13.6218 11.3821 12.9067 10.5 12.9067ZM8.98358 7.16553L9.24115 11.8878C9.2532 12.1087 9.43591 12.2817 9.65719 12.2817H11.3428C11.5641 12.2817 11.7468 12.1087 11.7589 11.8878L12.0164 7.16553C12.0295 6.92685 11.8394 6.72616 11.6004 6.72616H9.39959C9.16056 6.72616 8.97056 6.92685 8.98358 7.16553Z"
+            fill="white"
+          />
+        </svg>
+      </>
+    )
+  }
+  else if(criticaltask > 0 && criticalopen == 0){
+    return(
+      <>
+        <div class="rectangle-113"></div>
+        <div class="critical-tasks-done">Critical Tasks done</div>
+        <svg
+          class="vector6"
+          width="21"
+          height="19"
+          viewBox="0 0 21 19"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20.2749 15.8933C20.9158 17.0042 20.1113 18.3928 18.8313 18.3928H2.16855C0.886017 18.3928 0.0852531 17.002 0.724906 15.8933L9.05636 1.44786C9.69758 0.33644 11.3036 0.338454 11.9437 1.44786L20.2749 15.8933ZM10.5 12.9067C9.61789 12.9067 8.90279 13.6218 8.90279 14.5039C8.90279 15.3861 9.61789 16.1012 10.5 16.1012C11.3821 16.1012 12.0972 15.3861 12.0972 14.5039C12.0972 13.6218 11.3821 12.9067 10.5 12.9067ZM8.98358 7.16553L9.24115 11.8878C9.2532 12.1087 9.43591 12.2817 9.65719 12.2817H11.3428C11.5641 12.2817 11.7468 12.1087 11.7589 11.8878L12.0164 7.16553C12.0295 6.92685 11.8394 6.72616 11.6004 6.72616H9.39959C9.16056 6.72616 8.97056 6.92685 8.98358 7.16553Z"
+            fill="white"
+          />
+        </svg>
+      </>
+    )}
+    else{
+      return(
+        <>
+        <div class="rectangle-113-2"></div>
+        <div class="critical-tasks-done">No Critical Tasks</div>
+        <svg
+          class="vector6"
+          width="21"
+          height="19"
+          viewBox="0 0 21 19"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20.2749 15.8933C20.9158 17.0042 20.1113 18.3928 18.8313 18.3928H2.16855C0.886017 18.3928 0.0852531 17.002 0.724906 15.8933L9.05636 1.44786C9.69758 0.33644 11.3036 0.338454 11.9437 1.44786L20.2749 15.8933ZM10.5 12.9067C9.61789 12.9067 8.90279 13.6218 8.90279 14.5039C8.90279 15.3861 9.61789 16.1012 10.5 16.1012C11.3821 16.1012 12.0972 15.3861 12.0972 14.5039C12.0972 13.6218 11.3821 12.9067 10.5 12.9067ZM8.98358 7.16553L9.24115 11.8878C9.2532 12.1087 9.43591 12.2817 9.65719 12.2817H11.3428C11.5641 12.2817 11.7468 12.1087 11.7589 11.8878L12.0164 7.16553C12.0295 6.92685 11.8394 6.72616 11.6004 6.72616H9.39959C9.16056 6.72616 8.97056 6.92685 8.98358 7.16553Z"
+            fill="white"
+          />
+        </svg>
+      </>
+      )
+    }
 }
 
 export default ZoneBlock;

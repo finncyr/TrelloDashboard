@@ -184,6 +184,8 @@ app.get("/api/lists/:listid", (req, res, next) => {
   var countall = 0;
   var countclosed = 0;
   var listmembers = [];
+  var criticaltask = 0;
+  var criticalopen = 0;
 
   trello.getListsOnBoard(boardid)
   .then((lists) => {
@@ -200,10 +202,26 @@ app.get("/api/lists/:listid", (req, res, next) => {
             countclosed++;
           }
           members = members.concat(el['idMembers']);
+          el['labels'].forEach(label => {
+            if(label['name'] == "CRITICAL") {
+              criticaltask++;
+              if(!el['dueComplete']) {
+                criticalopen++;
+              }
+            }
+          });
         });
         listmembers = [...new Set(members)];
 
-        res.json({id: req.params.listid, name: listname, allcards: countall, closedcards: countclosed, listmembers: listmembers});
+        res.json({
+          id: req.params.listid, 
+          name: listname, 
+          allcards: countall, 
+          closedcards: countclosed, 
+          listmembers: listmembers, 
+          criticaltask: criticaltask, 
+          criticalopen: criticalopen
+        });
     })
     .catch((err) => next(err));
   })

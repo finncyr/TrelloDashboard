@@ -30,12 +30,13 @@ function App() {
       </div>
         <ProgressBlock />
         <URLPostInput />
+
         <SPIMiniBlock />
         <SVMiniBlock />
         <RUMiniBlock />
+        
         <MemberBlock />
 
-        
         <ZoneWrapper />
       </div>
 
