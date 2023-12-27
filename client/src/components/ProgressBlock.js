@@ -22,7 +22,6 @@ function ProgressBlock (props) {
 
   React.useEffect(() => {
     setMaxwidth(maxRef.current.offsetWidth);
-    console.log(maxwidth);
   })
 
   return(

@@ -701,12 +701,20 @@
 }
 ._5-9 {
   color: #ffffff;
-  text-align: left;
+  text-align: center;
   font: 600 15px "Inter", sans-serif;
-  position: absolute;
-  left: 70px;
-  top: 54px;
+  position: relative;
+  top: 25%;
 }
+._5-9-empty {
+  position: absolute;
+  left: 95px;
+  color: black;
+  text-align: center;
+  font: 600 15px "Inter", sans-serif;
+  top: 25%;
+}
+
 .people {
   flex-shrink: 0;
   width: 215px;

@@ -11,6 +11,9 @@ function ZoneBlock (props) {
   const [ontime, setOntime] = React.useState(false);
   const [members, setMembers] = React.useState([]);
 
+  const [maxwidth, setMaxwidth] = React.useState(0);
+  const maxRef = React.useRef(null);
+
   React.useEffect(() => {
     fetch("/api/lists/" + id)
       .then((res) => res.json())
@@ -27,15 +30,21 @@ function ZoneBlock (props) {
       });
   }, []);
 
+  React.useEffect(() => {
+    setMaxwidth(maxRef.current.offsetWidth);
+  })
+
       
     return(
         <>
         <div class="property-1-a">
           <div class="zone-a">{name}</div>
           <div class="progress-bar">
-            <div class="rectangle-52"></div>
-            <div class="rectangle-62"></div>
-            <div class="_5-9">{closedcards}/{allcards}</div>
+            <div class="rectangle-52" ref={maxRef}></div>
+            <div class="rectangle-62" style={{width: ((maxwidth/allcards) * closedcards)}}>
+              <div class={((maxwidth/allcards) * closedcards) >= 50 ? "_5-9" : "_5-9-empty"}>{closedcards}/{allcards}</div>
+            </div>
+            
           </div>
           <div class="people">
           {members.map((member) => (
