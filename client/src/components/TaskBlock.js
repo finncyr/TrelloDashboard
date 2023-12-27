@@ -14,14 +14,13 @@ function TaskBlock (props) {
             fetch("/api/members/" + assignee)
             .then((res) => res.json())
             .then((member) => {
-              members.push(member);
+              var combinedtask = {...el, members: [...members, member]};
+              setTasks(tasks => [...tasks, combinedtask]);
             });
           });
-          var combinedtask = {...el, members: members};
-          setTasks(tasks => [...tasks, combinedtask]);
       });
     });
-  });
+  }, []);
 
       
     return(
