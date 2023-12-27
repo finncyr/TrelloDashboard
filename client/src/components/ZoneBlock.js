@@ -4,10 +4,9 @@ function ZoneBlock (props) {
 
   const [name, setName] = React.useState(props.name || "Unnamed Zone");
   const [id, setId] = React.useState(props.id || 0);
-  
+
   const [allcards, setAllcards] = React.useState(0);
   const [closedcards, setClosedcards] = React.useState(0);
-  const [listmembers, setListmembers] = React.useState([]);
   const [critical, setCritical] = React.useState(false);
   const [ontime, setOntime] = React.useState(false);
   const [members, setMembers] = React.useState([]);
@@ -18,9 +17,15 @@ function ZoneBlock (props) {
       .then((list) => {
           setAllcards(list['allcards']);
           setClosedcards(list['closedcards']);
-          setListmembers(list['listmembers']);
+          list['listmembers'].forEach(el => {
+            fetch("/api/members/" + el)
+            .then((res) => res.json())
+            .then((member) => {
+                setMembers(members => [...members, member]);
+            });
+        });
       });
-  });
+  }, []);
 
       
     return(
@@ -33,11 +38,11 @@ function ZoneBlock (props) {
             <div class="_5-9">{closedcards}/{allcards}</div>
           </div>
           <div class="people">
-            {members.map((member) => (
+          {members.map((member) => (
               <img 
                 class="ellipse-1"
-                title={member['name']}
-                src={"https://gravatar.com/avatar/" + "c9c491176813e3368d56cef43e935a4f"} />))}
+                title={member['fullName']}
+                src={"https://gravatar.com/avatar/" + member['gravatarHash']} />))}
           </div>
           <div class="critical-task">
             <div class="rectangle-11"></div>
