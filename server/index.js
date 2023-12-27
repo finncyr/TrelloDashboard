@@ -464,38 +464,6 @@ app.get("/api/board/spi", (req, res, next) => {
 
 app.get("/api/members", (req, res, next) => {
   trello.getBoardMembers(boardid)
-    .then((members) => {
-      res.json(members);
-    })
-    .catch((err) => next(err));
-});
-
-app.get("/api/members/:memberid", (req, res, next) => {
-  trello.getMember(req.params.memberid)
-    .then((member) => {
-      res.json(member);
-    })
-    .catch((err) => next(err));
-});
-
-app.get("/api/members/:memberid/availabletime", (req, res, next) => {
-  trello.getMemberCards(req.params.memberid)
-    .then((cards) => {
-      var availabletime = 0;
-      cards.forEach(el => {
-        if(el['name'].includes("TIMECARD")) {
-          availabletime += parseInt(el['desc']);
-        }
-      });
-      res.json(availabletime);
-    })
-    .catch((err) => next(err));
-});
-
-// ---- TIMEVALUES ----
-
-app.get("/api/timemembers", (req, res, next) => {
-  trello.getBoardMembers(boardid)
   .then((members) => {
     trello.getCardsOnBoard(boardid)
     .then((cards) => {
@@ -521,6 +489,30 @@ app.get("/api/timemembers", (req, res, next) => {
   })
   .catch((err) => next(err));
 });
+
+app.get("/api/members/:memberid", (req, res, next) => {
+  trello.getMember(req.params.memberid)
+    .then((member) => {
+      res.json(member);
+    })
+    .catch((err) => next(err));
+});
+
+app.get("/api/members/:memberid/availabletime", (req, res, next) => {
+  trello.getMemberCards(req.params.memberid)
+    .then((cards) => {
+      var availabletime = 0;
+      cards.forEach(el => {
+        if(el['name'].includes("TIMECARD")) {
+          availabletime += parseInt(el['desc']);
+        }
+      });
+      res.json(availabletime);
+    })
+    .catch((err) => next(err));
+});
+
+// ---- TIMEVALUES ----
 
 // Returns an array of all timecards
 app.get("/api/timecards", (req, res) => {

@@ -233,6 +233,48 @@
   left: 20px;
   top: 18px;
 }
+
+.member-list {
+  width: 393px;
+  height: 230px;
+  position: absolute;
+  left: 20px;
+  top: 50px;
+  overflow: auto;
+  display: table;
+  align-items: start;
+}
+
+.tableheader {
+  vertical-align: super;
+  align-items: start;
+  text-align: left;
+  height: fit-content;
+  text-decoration: underline;
+}
+
+.member {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 15px;
+}
+
+.member-name {
+  color: #000000;
+  text-align: left;
+  font: 400 15px "Inter", sans-serif;
+  position: relative;
+}
+
+.member-name div {
+  display: table-cell;
+  padding: 5px 0;
+}
+
+
 .graph {
   position: absolute;
   inset: 0;
