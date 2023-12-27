@@ -34,10 +34,12 @@ function App() {
         <SPIMiniBlock />
         <SVMiniBlock />
         <RUMiniBlock />
-        
+
         <MemberBlock />
 
         <ZoneWrapper />
+
+        <TaskBlock />
       </div>
 
   );

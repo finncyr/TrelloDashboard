@@ -169,6 +169,40 @@ app.get("/api/cards/:cardid/overdue", (req, res) => {
     .catch((err) => next(err));
 });
 
+// Returns all critical tasks
+app.get("/api/criticaltasks", (req, res, next) => {
+  trello.getCardsOnBoard(boardid)
+    .then((cards) => {
+      trello.getListsOnBoard(boardid)
+        .then((alllists) => {
+        var criticaltasks = [];
+
+        cards.forEach(el => {
+          el['labels'].forEach(label => {
+            if(label['name'] == "CRITICAL") {
+              var listname = "";
+              alllists.filter(function(list){
+                if(list['id'] == el['idList']) {
+                  listname = list['name'];
+                }
+              });
+              criticaltasks.push({
+                id: el['id'], 
+                name: el['name'], 
+                listname: listname, 
+                due: el['due'],
+                assignees: el['idMembers']
+              });
+            }
+          });
+        });
+        res.json(criticaltasks);
+      })
+      .catch((err) => next(err));
+    })
+    .catch((err) => next(err));
+});
+
 // ---- LISTS ----
 
 app.get("/api/lists", (req, res, next) => {
