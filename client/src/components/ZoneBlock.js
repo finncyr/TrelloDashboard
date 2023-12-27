@@ -11,6 +11,7 @@ function ZoneBlock (props) {
   const [maxwidth, setMaxwidth] = React.useState(0);
   const [criticaltask, setCriticaltask] = React.useState(0);
   const [criticalopen, setCriticalopen] = React.useState(0);
+  const [overtimed, setOvertimed] = React.useState(0);
 
   const maxRef = React.useRef(null);
 
@@ -22,6 +23,7 @@ function ZoneBlock (props) {
           setClosedcards(list['closedcards']);
           setCriticaltask(list['criticaltask']);
           setCriticalopen(list['criticalopen']);
+          setOvertimed(list['overtimed']);
           list['listmembers'].forEach(el => {
             fetch("/api/members/" + el)
             .then((res) => res.json())
@@ -61,21 +63,7 @@ function ZoneBlock (props) {
           </div>
 
           <div class="on-time">
-            <div class="rectangle-112"></div>
-            <div class="tasks-on-time">Tasks on time</div>
-            <svg
-              class="vector5"
-              width="21"
-              height="21"
-              viewBox="0 0 21 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.5 0.615051C4.97581 0.615051 0.5 5.09086 0.5 10.6151C0.5 16.1392 4.97581 20.6151 10.5 20.6151C16.0242 20.6151 20.5 16.1392 20.5 10.6151C20.5 5.09086 16.0242 0.615051 10.5 0.615051ZM12.8024 14.732L9.24597 12.1473C9.12097 12.0546 9.04839 11.9094 9.04839 11.7562V4.96989C9.04839 4.70376 9.26613 4.48602 9.53226 4.48602H11.4677C11.7339 4.48602 11.9516 4.70376 11.9516 4.96989V10.5223L14.5121 12.3852C14.7298 12.5425 14.7742 12.8449 14.6169 13.0626L13.4798 14.6271C13.3226 14.8409 13.0202 14.8892 12.8024 14.732Z"
-                fill="white"
-              />
-            </svg>
+            {overtimeBlock(overtimed)}
           </div>
         </div>
         </>
@@ -139,6 +127,51 @@ function criticalTaskBlock(criticaltask, criticalopen){
       </>
       )
     }
+}
+
+function overtimeBlock(overtimed) {
+  if(overtimed == 0){
+    return(
+      <>
+        <div class="rectangle-112"></div>
+        <div class="tasks-on-time">Tasks on time</div>
+        <svg
+          class="vector5"
+          width="21"
+          height="21"
+          viewBox="0 0 21 21"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M10.5 0.615051C4.97581 0.615051 0.5 5.09086 0.5 10.6151C0.5 16.1392 4.97581 20.6151 10.5 20.6151C16.0242 20.6151 20.5 16.1392 20.5 10.6151C20.5 5.09086 16.0242 0.615051 10.5 0.615051ZM12.8024 14.732L9.24597 12.1473C9.12097 12.0546 9.04839 11.9094 9.04839 11.7562V4.96989C9.04839 4.70376 9.26613 4.48602 9.53226 4.48602H11.4677C11.7339 4.48602 11.9516 4.70376 11.9516 4.96989V10.5223L14.5121 12.3852C14.7298 12.5425 14.7742 12.8449 14.6169 13.0626L13.4798 14.6271C13.3226 14.8409 13.0202 14.8892 12.8024 14.732Z"
+            fill="white"
+          />
+        </svg>
+      </>
+    )
+  }
+  else{
+    return(
+      <>
+        <div class="rectangle-114"></div>
+        <div class="task-behind-schedule">{overtimed > 1 ? overtimed + " Tasks behind schedule" : overtimed + " Task behind schedule"}</div>
+        <svg
+          class="vector9"
+          width="21"
+          height="21"
+          viewBox="0 0 21 21"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M10.5 0.615051C4.97581 0.615051 0.5 5.09086 0.5 10.6151C0.5 16.1392 4.97581 20.6151 10.5 20.6151C16.0242 20.6151 20.5 16.1392 20.5 10.6151C20.5 5.09086 16.0242 0.615051 10.5 0.615051ZM12.8024 14.732L9.24597 12.1473C9.12097 12.0546 9.04839 11.9094 9.04839 11.7562V4.96989C9.04839 4.70376 9.26613 4.48602 9.53226 4.48602H11.4677C11.7339 4.48602 11.9516 4.70376 11.9516 4.96989V10.5223L14.5121 12.3852C14.7298 12.5425 14.7742 12.8449 14.6169 13.0626L13.4798 14.6271C13.3226 14.8409 13.0202 14.8892 12.8024 14.732Z"
+            fill="white"
+          />
+        </svg>
+        </>
+    )
+  }
 }
 
 export default ZoneBlock;
