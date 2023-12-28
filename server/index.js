@@ -5,8 +5,6 @@ const express = require("express");
 const path = require('path');
 const Trello = require("trello");
 const dotenv = require('dotenv');
-const { brotliCompress } = require("zlib");
-const { toUSVString } = require("util");
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('../swagger-output.json');
 const cookieParser = require('cookie-parser');
@@ -17,13 +15,7 @@ const PORT = process.env.PORT || 3001;
 var trello = new Trello(process.env.POWER_UP_API_KEY, process.env.POWER_UP_TOKEN);
 const app = express();
 
-// Global Variables
-let URL = ""; //global URL of current trello board
-
 // ------------------------
-
-
-// -----------------------
 
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, '../client/build')));
@@ -36,6 +28,8 @@ app.use(express.json()); //JSON Parser for POST/PUT Requests
 app.use(cookieParser()); //Cookie Parser for BoardID
 
 
+// ---- ROUTES ----
+
 app.post("/api/setboard", (req, res) => {
   // #swagger.description = 'Sets the boardid to be used for all other requests'
   /*  #swagger.parameters['body'] = {
@@ -47,7 +41,6 @@ app.post("/api/setboard", (req, res) => {
     } */
   let regex = /https:\/\/trello\.com\/b\/[A-Za-z0-9]+\/[A-Za-z0-9]+/i;
   if(req.body['url'] != null && req.body['url'] != "" && regex.test(req.body['url'])) {
-    URL = req.body['url'];
     var urljson = req.body['url'] + ".json";
     fetch(urljson)
       .then((trellores) => {
@@ -67,7 +60,7 @@ app.post("/api/setboard", (req, res) => {
         }
         else if(board['id'] != null && board['id'] != "") {
           boardid = board['id'];
-          res.cookie("boardid", board['id']).send("Board ID changed to: " + board['id']);
+          res.cookie("boardid", board['id']).cookie("url", req.body['url']).send("Board ID changed to: " + board['id']);
           console.log("Session changed to: " + board['id']);
         }
       });
@@ -84,13 +77,17 @@ app.post("/api/setboard", (req, res) => {
   }
 });
 
+// ---- TITLE ----
 
-
-// Get title from Board-URL
-//HACK: Only Works with full url, not short version
 app.get("/api/title", (req, res) => {
-  var URLsplit = URL.split("/");
-  res.json({message: URLsplit[URLsplit.length - 1]});
+  // #swagger.description = 'Returns the title of the board'
+  if(req.cookies.url == null) {
+    res.json({message: ""});
+  }
+  else {
+    var URLsplit = req.cookies.url.split("/");
+    res.json({message: URLsplit[URLsplit.length - 1]});
+  }
 });
 
 // ---- COUNTS ----

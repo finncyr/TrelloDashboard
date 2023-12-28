@@ -38,7 +38,8 @@ function MemberBlock (props) {
                     </thead>
                     
                     <tbody class="tablebody">
-                        {members.map((member) => (
+                        {members.sort((a, b) => (a['availabletime'] < b['availabletime']) ? 1 : -1)
+                        .map((member) => (
                         <tr>
                             <td>
                                 <img 

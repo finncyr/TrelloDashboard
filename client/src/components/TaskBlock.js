@@ -32,7 +32,8 @@ function TaskBlock (props) {
       <div class="tasks">
         <div class="tasks2">Critical Tasks</div>
         <div class="rectangle-3">
-          {tasks.map((task) => (
+          {tasks.sort((a, b) => (a['due'] > b['due']) ? 1 : -1)
+          .map((task) => (
             <div class="task" style={{background: (((Date.parse(task['due']) - Date.now()) < 0) && !task['dueComplete'] ? "#fe9894" :(task['dueComplete'] ? "#a1cea5" : "#d9d9d9"))}}>
             <div class="aufgabe-1-1-testbeschreibung" style={{textDecoration: task['dueComplete'] ? "line-through" : ""}}>
               {task['name']}
