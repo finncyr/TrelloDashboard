@@ -16,11 +16,9 @@ const PORT = process.env.PORT || 3001;
 var trello = new Trello(process.env.POWER_UP_API_KEY, process.env.POWER_UP_TOKEN);
 const app = express();
 
-// Constants
-const URL = "https://trello.com/b/W3JXKZYD/test";
-
 // Global Variables
-let boardid = "5f07168df739986764e3405c"; //global id of current trello board
+let URL = ""; //global URL of current trello board
+let boardid = ""; //global id of current trello board
 
 // ------------------------
 
@@ -33,13 +31,43 @@ app.use(express.static(path.resolve(__dirname, '../client/build')));
 // server Swagger-Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Middleware to be able to parse JSON from POST-Requests
+app.use(express.json());
 
-// TODO: Fix Handling, returns "undefined"
+
 app.post("/api/setboard", (req, res) => {
+  // #swagger.description = 'Sets the boardid to be used for all other requests'
+  /*  #swagger.parameters['body'] = {
+            in: 'body',
+            description: 'URL or BoardID of the Trello Board to be used',
+            schema: {
+                $url: 'https://trello.com/b/W3JXKZYD/test'
+            }
+    } */
   console.log(req.body);
-  console.log(JSON.parse(req.body));
-  res.json(req.body);
+  if(req.body['url'] != null) {
+    URL = req.body['url'];
+    var urljson = req.body['url'] + ".json";
+    try {fetch(urljson)
+      .then((res) => res.json())
+      .then((board) => {
+        boardid = board['id'];
+        console.log("Board ID changed to: " + boardid);
+        res.send("Board ID changed to: " + boardid);
+      });
+    }
+    catch {
+      res.status(404).send("Error: Invalid URL!");
+      // #swagger.responses[404] = { description: 'Error: Invalid URL or URL not found on Trello!' }
+    }
+  }
+  else {
+    res.status(400).send("No BoardID or URL provided!");
+    // #swagger.responses[400] = { description: 'No boardid or URL provided!' }
+  }
 });
+
+
 
 // Get title from Board-URL
 //HACK: Only Works with full url, not short version
@@ -50,7 +78,6 @@ app.get("/api/title", (req, res) => {
 
 // ---- COUNTS ----
 
-// /api/counts/opentasks
 app.get("/api/counts/opentasks", (req, res, next) => {
   // #swagger.description = 'Returns the amount of all open tasks on the board'
   trello.getListsOnBoard(boardid)
@@ -97,7 +124,6 @@ app.get("/api/counts/closedtasks", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-// Returns count of all tasks
 app.get("/api/counts/alltasks", (req, res, next) => {
   // #swagger.description = 'Returns the amount of all tasks on the board'
   trello.getListsOnBoard(boardid)
@@ -137,7 +163,6 @@ app.get("/api/cards/:cardid", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-// Returns the Duration of a Task in Minutes
 app.get("/api/cards/:cardid/duration", (req, res) => {
   // #swagger.description = 'Returns the duration of a specific card on the board in minutes'
   trello.getLabelsForBoard(boardid)
@@ -156,7 +181,6 @@ app.get("/api/cards/:cardid/duration", (req, res) => {
   .catch((err) => next(err));
 });
 
-// Returns the due time of a card in UNIX-Timecode
 app.get("/api/cards/:cardid/due", (req, res) => {
   // #swagger.description = 'Returns the due time of a specific card on the board in UNIX-Timecode'
   trello.getCard(boardid, req.params.cardid)
@@ -166,7 +190,7 @@ app.get("/api/cards/:cardid/due", (req, res) => {
     .catch((err) => next(err));
 });
 
-// Returns the overtime of a card in UNIX-Timecode
+
 // Negative Values mean the card is overdue by that amount of milliseconds
 app.get("/api/cards/:cardid/overdue", (req, res) => {
   // #swagger.description = 'Returns the overtime of a specific card on the board in UNIX-Timecode'
@@ -177,7 +201,6 @@ app.get("/api/cards/:cardid/overdue", (req, res) => {
     .catch((err) => next(err));
 });
 
-// Returns all critical tasks
 app.get("/api/criticaltasks", (req, res, next) => {
   // #swagger.description = 'Returns a list of all critical tasks on the board'
   trello.getCardsOnBoard(boardid)
@@ -329,7 +352,6 @@ app.get("/api/lists/:listid/members", (req, res, next) => {
 });
 
 
-// Returns all overtimed cards on a list
 app.get("/api/lists/:listid/overtimed", (req, res) => {
   // #swagger.description = 'Returns an array of all overtimed cards on a specific list on the board'
   trello.getCardsOnList(req.params.listid)
@@ -345,7 +367,6 @@ app.get("/api/lists/:listid/overtimed", (req, res) => {
     .catch((err) => next(err));
 });
 
-// Returns true if any card on a list is overtimed
 app.get("/api/lists/:listid/anyovertimed", (req, res) => {
   // #swagger.description = 'Returns true if any card on a specific list on the board is overtimed'
   trello.getCardsOnList(req.params.listid)
@@ -361,7 +382,6 @@ app.get("/api/lists/:listid/anyovertimed", (req, res) => {
     .catch((err) => next(err));
 });
 
-// Returns the summed Schedule Variance of a list in minutes
 app.get("/api/lists/:listid/sv", (req, res) => {
   // #swagger.description = 'Returns the summed Schedule Variance of a specific list on the board in minutes'
   trello.getLabelsForBoard(boardid)
@@ -391,7 +411,6 @@ app.get("/api/lists/:listid/sv", (req, res) => {
 
 // ---- BOARD ----
 
-// Returns the summed Schedule Variance of the whole board in minutes
 app.get("/api/board/sv", (req, res, next) => {
   // #swagger.description = 'Returns the summed Schedule Variance of the whole board in minutes'
   trello.getLabelsForBoard(boardid)  //load all required data
@@ -427,7 +446,6 @@ app.get("/api/board/sv", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-// Returns the summed Resource Utilization of the whole board in decimal notation
 app.get("/api/board/ru", (req, res, next) => {
   // #swagger.description = 'Returns the summed Resource Utilization of the whole board in decimal notation'
   trello.getLabelsForBoard(boardid)  //load all required data
@@ -474,7 +492,6 @@ app.get("/api/board/ru", (req, res, next) => {
   .catch((err) => next(err));
 });
 
-// Returns the summed Schedule Performance Index of the whole board in decimal notation
 app.get("/api/board/spi", (req, res, next) => {
   // #swagger.description = 'Returns the summed Schedule Performance Index of the whole board in decimal notation'
   trello.getLabelsForBoard(boardid)  //load all required data
@@ -573,7 +590,6 @@ app.get("/api/members/:memberid/availabletime", (req, res, next) => {
 
 // ---- TIMEVALUES ----
 
-// Returns an array of all timecards
 app.get("/api/timecards", (req, res) => {
   // #swagger.description = 'Returns an array of all timecards on the board'
   trello.getCardsOnBoard(boardid)

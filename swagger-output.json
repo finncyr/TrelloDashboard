@@ -13,7 +13,26 @@
   "paths": {
     "/api/setboard": {
       "post": {
-        "description": "",
+        "description": "Sets the boardid to be used for all other requests",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "boardid to be set",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "boardid": {
+                  "type": "string",
+                  "example": "5f07168df739986764e3405c"
+                }
+              },
+              "required": [
+                "boardid"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
