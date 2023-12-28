@@ -29,27 +29,30 @@ function MemberBlock (props) {
             <div class="rectangle-2"></div>
             <div class="member-title">Members</div>
 
-            <table class="member-list" >
-                <tbody>
-                    <tr class="tableheader">
-                        <td>Picture</td>
-                        <td>Name</td>
-                        <td>Available</td>
-                    </tr>
-                    {members.map((member) => (
-                    <tr>
-                        <td>
-                            <img 
-                                class="ellipse-1"
-                                title={member['fullName']}
-                                src={"https://gravatar.com/avatar/" + member['gravatarHash'] + "?d=retro"} />
-                        </td>
-                        <td class="member-name">{member['fullName']}</td>
-                        <td class="member-time">{minToTime(member['availabletime'])}h</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            <div class="tablewrapper">
+                <table class="member-list" >
+                    <thead class="tableheader">
+                        <th>Picture</th>
+                        <th>Name</th>
+                        <th>Available</th>
+                    </thead>
+                    
+                    <tbody class="tablebody">
+                        {members.map((member) => (
+                        <tr>
+                            <td>
+                                <img 
+                                    class="ellipse-1"
+                                    title={member['fullName']}
+                                    src={"https://gravatar.com/avatar/" + member['gravatarHash'] + "?d=retro"} />
+                            </td>
+                            <td class="member-name">{member['fullName']}</td>
+                            <td class="member-time">{minToTime(member['availabletime'])}h</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
         </>
     )

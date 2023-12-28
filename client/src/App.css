@@ -208,7 +208,8 @@
 }
 .members {
   width: 433px;
-  height: 300px;
+  height: auto;
+  min-height: 300px;
   position: absolute;
   left: 49px;
   top: 402px;
@@ -229,28 +230,39 @@
   color: #000000;
   text-align: left;
   font: 600 15px "Inter", sans-serif;
-  position: absolute;
+  position: relative;
   left: 20px;
   top: 18px;
 }
-
 .member-list {
   width: 393px;
-  height: 230px;
-  position: absolute;
   left: 20px;
-  top: 50px;
-  overflow: auto;
   display: table;
-  align-items: start;
+  position: relative;
+}
+.tablewrapper {
+  overflow: auto;
+  top: 28px;
+  height: 240px;
+  display: block;
+  position: relative;
 }
 
 .tableheader {
+  text-align: left;
+}
+
+.tableheader thead th {
+  position: sticky;
   vertical-align: super;
   align-items: start;
   text-align: left;
   height: fit-content;
   text-decoration: underline;
+}
+.tablebody {
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .member {
