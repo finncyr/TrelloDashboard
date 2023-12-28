@@ -426,7 +426,7 @@ app.get("/api/lists/:listid/sv", (req, res) => {
 // ---- BOARD ----
 
 app.get("/api/board/sv", (req, res, next) => {
-  // #swagger.description = 'Returns the summed Schedule Variance of the whole board in minutes'
+  // #swagger.description = 'Returns the average Schedule Variance per card of the whole board in remaining minutes'
   trello.getLabelsForBoard(req.cookies.boardid)  //load all required data
   .then((durations) => {
     trello.getListsOnBoard(req.cookies.boardid)
@@ -451,7 +451,7 @@ app.get("/api/board/sv", (req, res, next) => {
               sv += (Date.parse(el['due']) - cardduaration * 60000) - Date.now(); //calculate sv
             }
           });
-          res.json(Math.round(sv/60000)); //return sv in minutes
+          res.json(Math.round((sv/60000)/cards.length)); //return sv in minutes
         })
         .catch((err) => next(err));
       })

@@ -164,7 +164,7 @@
   text-align: left;
   font: 600 32px "Inter", sans-serif;
   position: absolute;
-  left: calc(50% - 22px);
+  left: calc(50% - 32px);
   top: 8px;
 }
 ._1-2 {
@@ -173,7 +173,7 @@
   font: 600 32px "Inter", sans-serif;
   position: absolute;
   left: 0px;
-  top: 75px;
+  top: 55px;
   width: 132px;
 }
 .ru-mini-block {
