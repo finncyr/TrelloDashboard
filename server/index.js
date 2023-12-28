@@ -9,6 +9,7 @@ const { brotliCompress } = require("zlib");
 const { toUSVString } = require("util");
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('../swagger-output.json');
+const cookieParser = require('cookie-parser');
 
 // Configuartions
 dotenv.config();
@@ -31,8 +32,9 @@ app.use(express.static(path.resolve(__dirname, '../client/build')));
 // server Swagger-Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Middleware to be able to parse JSON from POST-Requests
-app.use(express.json());
+// Middlewares
+app.use(express.json()); //JSON Parser for POST/PUT Requests
+app.use(cookieParser()); //Cookie Parser for BoardID
 
 
 app.post("/api/setboard", (req, res) => {
@@ -45,15 +47,14 @@ app.post("/api/setboard", (req, res) => {
             }
     } */
   console.log(req.body);
-  if(req.body['url'] != null) {
+  if(req.body['url'] != null && req.body['url'] != "") {
     URL = req.body['url'];
     var urljson = req.body['url'] + ".json";
     try {fetch(urljson)
       .then((res) => res.json())
       .then((board) => {
         boardid = board['id'];
-        console.log("Board ID changed to: " + boardid);
-        res.send("Board ID changed to: " + boardid);
+        res.cookie("boardid", board['id']).send("Board ID changed to: " + boardid);
       });
     }
     catch {
@@ -62,7 +63,7 @@ app.post("/api/setboard", (req, res) => {
     }
   }
   else {
-    res.status(400).send("No BoardID or URL provided!");
+    res.status(400).send("No URL provided!");
     // #swagger.responses[400] = { description: 'No boardid or URL provided!' }
   }
 });
@@ -149,7 +150,7 @@ app.get("/api/counts/alltasks", (req, res, next) => {
 
 // ---- CARDS ----
 
-app.get("/api/cards", (req, res) => {
+app.get("/api/cards", (req, res, next) => {
   // #swagger.description = 'Returns all cards on the board'
   trello.getCardsOnBoard(boardid)
     .then((cards) => res.json(cards))

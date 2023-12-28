@@ -15,12 +15,15 @@ class URLPostInput extends React.Component {
   
     handleSubmit(event) {
         // Send data to the backend via POST
-        //TODO: This wont work!
         fetch('/api/setboard', {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({url: this.state.value})
-        });
+        })
+        .then(res => {
+            if (res.ok) window.location.reload();
+            else alert("Error! Status Code: " + res.status + "\n" + res.statusText);
+        })
         event.preventDefault();
     }
   
@@ -29,9 +32,9 @@ class URLPostInput extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label class='boardURL-label'>
             Board-URL:
-            <input class='url-poster' type="text" value={this.state.value} onChange={this.handleChange} />
+            <input class='url-poster' type="text" placeholder="URL of Tello Board" value={this.state.value} onChange={this.handleChange} />
           </label>
-          <input class="url-poster-submit" type="submit" value="Submit" />
+          <input class="url-poster-submit" type="submit" value="Update" />
         </form>
       );
     }
