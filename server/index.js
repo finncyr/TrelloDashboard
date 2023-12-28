@@ -52,6 +52,7 @@ app.get("/api/title", (req, res) => {
 
 // /api/counts/opentasks
 app.get("/api/counts/opentasks", (req, res, next) => {
+  // #swagger.description = 'Returns the amount of all open tasks on the board'
   trello.getListsOnBoard(boardid)
   .then((alllists) => {
     trello.getCardsOnBoard(boardid)
@@ -74,6 +75,7 @@ app.get("/api/counts/opentasks", (req, res, next) => {
 });
 
 app.get("/api/counts/closedtasks", (req, res, next) => {
+  // #swagger.description = 'Returns the amount of all closed tasks on the board'
   trello.getListsOnBoard(boardid)
   .then((alllists) => {
     trello.getCardsOnBoard(boardid)
@@ -97,6 +99,7 @@ app.get("/api/counts/closedtasks", (req, res, next) => {
 
 // Returns count of all tasks
 app.get("/api/counts/alltasks", (req, res, next) => {
+  // #swagger.description = 'Returns the amount of all tasks on the board'
   trello.getListsOnBoard(boardid)
   .then((alllists) => {
     trello.getCardsOnBoard(boardid)
@@ -121,12 +124,14 @@ app.get("/api/counts/alltasks", (req, res, next) => {
 // ---- CARDS ----
 
 app.get("/api/cards", (req, res) => {
+  // #swagger.description = 'Returns all cards on the board'
   trello.getCardsOnBoard(boardid)
     .then((cards) => res.json(cards))
     .catch((err) => next(err));
 });
 
 app.get("/api/cards/:cardid", (req, res, next) => {
+  // #swagger.description = 'Returns a specific card on the board'
   trello.getCard(boardid, req.params.cardid)
     .then((card) => res.json(card))
     .catch((err) => next(err));
@@ -134,6 +139,7 @@ app.get("/api/cards/:cardid", (req, res, next) => {
 
 // Returns the Duration of a Task in Minutes
 app.get("/api/cards/:cardid/duration", (req, res) => {
+  // #swagger.description = 'Returns the duration of a specific card on the board in minutes'
   trello.getLabelsForBoard(boardid)
   .then((durations) => {
     trello.getCard(boardid, req.params.cardid)
@@ -152,6 +158,7 @@ app.get("/api/cards/:cardid/duration", (req, res) => {
 
 // Returns the due time of a card in UNIX-Timecode
 app.get("/api/cards/:cardid/due", (req, res) => {
+  // #swagger.description = 'Returns the due time of a specific card on the board in UNIX-Timecode'
   trello.getCard(boardid, req.params.cardid)
     .then((card) => {
       res.json(Date.parse(card['due']));
@@ -162,6 +169,7 @@ app.get("/api/cards/:cardid/due", (req, res) => {
 // Returns the overtime of a card in UNIX-Timecode
 // Negative Values mean the card is overdue by that amount of milliseconds
 app.get("/api/cards/:cardid/overdue", (req, res) => {
+  // #swagger.description = 'Returns the overtime of a specific card on the board in UNIX-Timecode'
   trello.getCard(boardid, req.params.cardid)
     .then((card) => {
       res.json((Date.parse(card['due']) - Date.now()));
@@ -171,6 +179,7 @@ app.get("/api/cards/:cardid/overdue", (req, res) => {
 
 // Returns all critical tasks
 app.get("/api/criticaltasks", (req, res, next) => {
+  // #swagger.description = 'Returns a list of all critical tasks on the board'
   trello.getCardsOnBoard(boardid)
     .then((cards) => {
       trello.getListsOnBoard(boardid)
@@ -207,6 +216,7 @@ app.get("/api/criticaltasks", (req, res, next) => {
 // ---- LISTS ----
 
 app.get("/api/lists", (req, res, next) => {
+  // #swagger.description = 'Returns all lists on the board'
   trello.getListsOnBoard(boardid)
     .then((lists) => {
       res.json(lists);
@@ -215,6 +225,7 @@ app.get("/api/lists", (req, res, next) => {
 });
 
 app.get("/api/lists/:listid", (req, res, next) => {
+  // #swagger.description = 'Returns a specific list on the board'
   var listname = "";
   var countall = 0;
   var countclosed = 0;
@@ -269,6 +280,7 @@ app.get("/api/lists/:listid", (req, res, next) => {
 });
 
 app.get("/api/lists/:listid/name", (req, res, next) => {
+  // #swagger.description = 'Returns the name of a specific list on the board'
   trello.getListsOnBoard(boardid)
     .then((lists) => {
       const list = lists.filter(function(el){
@@ -280,6 +292,7 @@ app.get("/api/lists/:listid/name", (req, res, next) => {
 });
 
 app.get("/api/lists/:listid/countall", (req, res, next) => {
+  // #swagger.description = 'Returns the amount of all cards on a specific list on the board'
   trello.getCardsOnList(req.params.listid)
     .then((cards) => {
       res.json(cards.length);
@@ -288,6 +301,7 @@ app.get("/api/lists/:listid/countall", (req, res, next) => {
 });
 
 app.get("/api/lists/:listid/countclosed", (req, res, next) => {
+  // #swagger.description = 'Returns the amount of all closed cards on a specific list on the board'
   trello.getCardsOnList(req.params.listid)
     .then((cards) => {
       var closed = 0;
@@ -302,6 +316,7 @@ app.get("/api/lists/:listid/countclosed", (req, res, next) => {
 });
 
 app.get("/api/lists/:listid/members", (req, res, next) => {
+  // #swagger.description = 'Returns an array of all members on a specific list on the board'
   trello.getCardsOnList(req.params.listid)
     .then((cards) => {
       var members = [];
@@ -316,6 +331,7 @@ app.get("/api/lists/:listid/members", (req, res, next) => {
 
 // Returns all overtimed cards on a list
 app.get("/api/lists/:listid/overtimed", (req, res) => {
+  // #swagger.description = 'Returns an array of all overtimed cards on a specific list on the board'
   trello.getCardsOnList(req.params.listid)
     .then((cards) => {
       var overtimed = [];
@@ -331,6 +347,7 @@ app.get("/api/lists/:listid/overtimed", (req, res) => {
 
 // Returns true if any card on a list is overtimed
 app.get("/api/lists/:listid/anyovertimed", (req, res) => {
+  // #swagger.description = 'Returns true if any card on a specific list on the board is overtimed'
   trello.getCardsOnList(req.params.listid)
     .then((cards) => {
       var overtimed = false;
@@ -346,6 +363,7 @@ app.get("/api/lists/:listid/anyovertimed", (req, res) => {
 
 // Returns the summed Schedule Variance of a list in minutes
 app.get("/api/lists/:listid/sv", (req, res) => {
+  // #swagger.description = 'Returns the summed Schedule Variance of a specific list on the board in minutes'
   trello.getLabelsForBoard(boardid)
   .then((durations) => {
     trello.getCardsOnList(req.params.listid)
@@ -375,6 +393,7 @@ app.get("/api/lists/:listid/sv", (req, res) => {
 
 // Returns the summed Schedule Variance of the whole board in minutes
 app.get("/api/board/sv", (req, res, next) => {
+  // #swagger.description = 'Returns the summed Schedule Variance of the whole board in minutes'
   trello.getLabelsForBoard(boardid)  //load all required data
   .then((durations) => {
     trello.getListsOnBoard(boardid)
@@ -410,6 +429,7 @@ app.get("/api/board/sv", (req, res, next) => {
 
 // Returns the summed Resource Utilization of the whole board in decimal notation
 app.get("/api/board/ru", (req, res, next) => {
+  // #swagger.description = 'Returns the summed Resource Utilization of the whole board in decimal notation'
   trello.getLabelsForBoard(boardid)  //load all required data
   .then((durations) => {
     trello.getListsOnBoard(boardid)
@@ -456,6 +476,7 @@ app.get("/api/board/ru", (req, res, next) => {
 
 // Returns the summed Schedule Performance Index of the whole board in decimal notation
 app.get("/api/board/spi", (req, res, next) => {
+  // #swagger.description = 'Returns the summed Schedule Performance Index of the whole board in decimal notation'
   trello.getLabelsForBoard(boardid)  //load all required data
   .then((durations) => {
     trello.getListsOnBoard(boardid)
@@ -498,6 +519,7 @@ app.get("/api/board/spi", (req, res, next) => {
 // ---- MEMBERS ----
 
 app.get("/api/members", (req, res, next) => {
+  // #swagger.description = 'Returns all members on the board'
   trello.getBoardMembers(boardid)
   .then((members) => {
     trello.getCardsOnBoard(boardid)
@@ -526,6 +548,7 @@ app.get("/api/members", (req, res, next) => {
 });
 
 app.get("/api/members/:memberid", (req, res, next) => {
+  // #swagger.description = 'Returns a specific member on the board'
   trello.getMember(req.params.memberid)
     .then((member) => {
       res.json(member);
@@ -534,6 +557,7 @@ app.get("/api/members/:memberid", (req, res, next) => {
 });
 
 app.get("/api/members/:memberid/availabletime", (req, res, next) => {
+  // #swagger.description = 'Returns the available time of a specific member on the board'
   trello.getMemberCards(req.params.memberid)
     .then((cards) => {
       var availabletime = 0;
@@ -551,6 +575,7 @@ app.get("/api/members/:memberid/availabletime", (req, res, next) => {
 
 // Returns an array of all timecards
 app.get("/api/timecards", (req, res) => {
+  // #swagger.description = 'Returns an array of all timecards on the board'
   trello.getCardsOnBoard(boardid)
     .then((cards) => {
       var timecards = [];
@@ -564,6 +589,7 @@ app.get("/api/timecards", (req, res) => {
 });
 
 app.get("/api/timeplanned", (req, res, next) => {
+  // #swagger.description = 'Returns the planned time (PV) of the whole board in minutes'
   trello.getLabelsForBoard(boardid)  //load all required data
   .then((durations) => {
     trello.getListsOnBoard(boardid)

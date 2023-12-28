@@ -4,6 +4,7 @@ const doc = {
   info: {
     title: 'TrelloDash API',
     description: 'API for TrelloDash',
+    version: '0.5.0',
   },
   host: 'localhost:3001'
 };

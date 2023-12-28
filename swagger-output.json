@@ -3,7 +3,7 @@
   "info": {
     "title": "TrelloDash API",
     "description": "API for TrelloDash",
-    "version": "1.0.0"
+    "version": "0.5.0"
   },
   "host": "localhost:3001",
   "basePath": "/",
@@ -33,7 +33,17 @@
     },
     "/api/counts/opentasks": {
       "get": {
-        "description": "",
+        "description": "Returns the amount of all open tasks on the board",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/counts/closedtasks": {
+      "get": {
+        "description": "Returns the amount of all closed tasks on the board",
         "responses": {
           "200": {
             "description": "OK"
@@ -43,7 +53,7 @@
     },
     "/api/counts/alltasks": {
       "get": {
-        "description": "",
+        "description": "Returns the amount of all tasks on the board",
         "responses": {
           "200": {
             "description": "OK"
@@ -53,7 +63,7 @@
     },
     "/api/cards": {
       "get": {
-        "description": "",
+        "description": "Returns all cards on the board",
         "responses": {
           "200": {
             "description": "OK"
@@ -63,7 +73,7 @@
     },
     "/api/cards/{cardid}": {
       "get": {
-        "description": "",
+        "description": "Returns a specific card on the board",
         "parameters": [
           {
             "name": "cardid",
@@ -81,7 +91,7 @@
     },
     "/api/cards/{cardid}/duration": {
       "get": {
-        "description": "",
+        "description": "Returns the duration of a specific card on the board in minutes",
         "parameters": [
           {
             "name": "cardid",
@@ -99,7 +109,7 @@
     },
     "/api/cards/{cardid}/due": {
       "get": {
-        "description": "",
+        "description": "Returns the due time of a specific card on the board in UNIX-Timecode",
         "parameters": [
           {
             "name": "cardid",
@@ -117,7 +127,7 @@
     },
     "/api/cards/{cardid}/overdue": {
       "get": {
-        "description": "",
+        "description": "Returns the overtime of a specific card on the board in UNIX-Timecode",
         "parameters": [
           {
             "name": "cardid",
@@ -133,9 +143,109 @@
         }
       }
     },
-    "/api/timecards": {
+    "/api/criticaltasks": {
       "get": {
-        "description": "",
+        "description": "Returns a list of all critical tasks on the board",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/lists": {
+      "get": {
+        "description": "Returns all lists on the board",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/lists/{listid}": {
+      "get": {
+        "description": "Returns a specific list on the board",
+        "parameters": [
+          {
+            "name": "listid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/lists/{listid}/name": {
+      "get": {
+        "description": "Returns the name of a specific list on the board",
+        "parameters": [
+          {
+            "name": "listid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/lists/{listid}/countall": {
+      "get": {
+        "description": "Returns the amount of all cards on a specific list on the board",
+        "parameters": [
+          {
+            "name": "listid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/lists/{listid}/countclosed": {
+      "get": {
+        "description": "Returns the amount of all closed cards on a specific list on the board",
+        "parameters": [
+          {
+            "name": "listid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/lists/{listid}/members": {
+      "get": {
+        "description": "Returns an array of all members on a specific list on the board",
+        "parameters": [
+          {
+            "name": "listid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -145,7 +255,7 @@
     },
     "/api/lists/{listid}/overtimed": {
       "get": {
-        "description": "",
+        "description": "Returns an array of all overtimed cards on a specific list on the board",
         "parameters": [
           {
             "name": "listid",
@@ -163,7 +273,7 @@
     },
     "/api/lists/{listid}/anyovertimed": {
       "get": {
-        "description": "",
+        "description": "Returns true if any card on a specific list on the board is overtimed",
         "parameters": [
           {
             "name": "listid",
@@ -181,7 +291,7 @@
     },
     "/api/lists/{listid}/sv": {
       "get": {
-        "description": "",
+        "description": "Returns the summed Schedule Variance of a specific list on the board in minutes",
         "parameters": [
           {
             "name": "listid",
@@ -199,7 +309,27 @@
     },
     "/api/board/sv": {
       "get": {
-        "description": "",
+        "description": "Returns the summed Schedule Variance of the whole board in minutes",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/board/ru": {
+      "get": {
+        "description": "Returns the summed Resource Utilization of the whole board in decimal notation",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/board/spi": {
+      "get": {
+        "description": "Returns the summed Schedule Performance Index of the whole board in decimal notation",
         "responses": {
           "200": {
             "description": "OK"
@@ -209,7 +339,7 @@
     },
     "/api/members": {
       "get": {
-        "description": "",
+        "description": "Returns all members on the board",
         "responses": {
           "200": {
             "description": "OK"
@@ -219,7 +349,7 @@
     },
     "/api/members/{memberid}": {
       "get": {
-        "description": "",
+        "description": "Returns a specific member on the board",
         "parameters": [
           {
             "name": "memberid",
@@ -237,7 +367,7 @@
     },
     "/api/members/{memberid}/availabletime": {
       "get": {
-        "description": "",
+        "description": "Returns the available time of a specific member on the board",
         "parameters": [
           {
             "name": "memberid",
@@ -253,9 +383,19 @@
         }
       }
     },
-    "/api/timemembers": {
+    "/api/timecards": {
       "get": {
-        "description": "",
+        "description": "Returns an array of all timecards on the board",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/timeplanned": {
+      "get": {
+        "description": "Returns the planned time (PV) of the whole board in minutes",
         "responses": {
           "200": {
             "description": "OK"
