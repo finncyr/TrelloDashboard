@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "title": "TrelloDash API",
-    "description": "API for TrelloDash",
-    "version": "0.5.0"
+    "description": "Trello-API-Extension for the TrelloDashboard",
+    "version": "0.6.0"
   },
   "host": "localhost:3001",
   "basePath": "/",
@@ -18,31 +18,37 @@
           {
             "name": "body",
             "in": "body",
-            "description": "boardid to be set",
+            "description": "URL or BoardID of the Trello Board to be used",
             "schema": {
               "type": "object",
               "properties": {
-                "boardid": {
+                "url": {
                   "type": "string",
-                  "example": "5f07168df739986764e3405c"
+                  "example": "https://trello.com/b/W3JXKZYD/test"
                 }
               },
               "required": [
-                "boardid"
+                "url"
               ]
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "400": {
+            "description": "No matching URL provided"
+          },
+          "404": {
+            "description": "Board not found on Trello"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
     "/api/title": {
       "get": {
-        "description": "",
+        "description": "Returns the title of the board",
         "responses": {
           "200": {
             "description": "OK"
@@ -328,7 +334,7 @@
     },
     "/api/board/sv": {
       "get": {
-        "description": "Returns the summed Schedule Variance of the whole board in minutes",
+        "description": "Returns the average Schedule Variance per card of the whole board in remaining minutes",
         "responses": {
           "200": {
             "description": "OK"

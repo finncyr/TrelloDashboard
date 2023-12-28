@@ -3,8 +3,8 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
   info: {
     title: 'TrelloDash API',
-    description: 'API for TrelloDash',
-    version: '0.5.0',
+    description: 'Trello-API-Extension for the TrelloDashboard',
+    version: '0.6.0',
   },
   host: 'localhost:3001'
 };
