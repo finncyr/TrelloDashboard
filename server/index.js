@@ -19,7 +19,6 @@ const app = express();
 
 // Global Variables
 let URL = ""; //global URL of current trello board
-let boardid = ""; //global id of current trello board
 
 // ------------------------
 
