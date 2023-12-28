@@ -20,6 +20,14 @@ $ npm run start
 $ npm run build
 ```
 
+## Updating the Swagger API-Documentation
+
+```
+$ npm run swagger
+$ npm run build && npm run start
+```
+-> http://localhost:3001/api-docs
+
 ### Progress
 ![Version 0.6.0](image-4.png)
 
