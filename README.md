@@ -21,12 +21,15 @@ $ npm run build
 ```
 
 ### Progress
-![Version 0.4.0](image-3.png)
+![Version 0.6.0](image-4.png)
 
 <details>
     <summary>Earlier stages</summary> 
 
-#### v0.2.0
+#### v0.4.0
+![Version 0.4.0](image-3.png)
+
+#### v0.2.0 & 0.3.0
 ![Version 0.2.0](image-2.png)
 
 #### v0.1.0
