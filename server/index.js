@@ -64,6 +64,7 @@ app.post("/api/setboard", (req, res) => {
         if (board == null) {
           res.status(404).send("Error: Board not found on Trello!");
           console.log("Board not found on Trello!");
+          // #swagger.responses[404] = { description: 'Board not found on Trello' }
         }
         else if(board['id'] != null && board['id'] != "") {
           boardid = board['id'];
@@ -73,13 +74,14 @@ app.post("/api/setboard", (req, res) => {
       });
   }
   else if(!regex.test(req.body['url'])) {
-    res.status(404).send("Error: Invalid URL!");
+    res.status(400).send("Error: Invalid URL!");
     console.log("Invalid URL!");
+    // #swagger.responses[400] = { description: 'No matching URL provided' }
   }
   else {
     res.status(500).send("Case not handled!");
     console.log("Case not handled!");
-    // #swagger.responses[400] = { description: 'No boardid or URL provided!' }
+    // #swagger.responses[500] = { description: 'Internal Server Error' }
   }
 });
 
