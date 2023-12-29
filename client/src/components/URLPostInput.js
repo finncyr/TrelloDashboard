@@ -29,6 +29,7 @@ class URLPostInput extends React.Component {
   
     render() {
       return (
+        <div class="url-poster-wrapper">
         <form onSubmit={this.handleSubmit}>
           <label class='boardURL-label'>
             Board-URL:
@@ -36,6 +37,7 @@ class URLPostInput extends React.Component {
           </label>
           <input class="url-poster-submit" type="submit" value="Update" />
         </form>
+        </div>
       );
     }
   }

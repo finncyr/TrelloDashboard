@@ -21,15 +21,14 @@ function ZoneWrapper (props) {
         <div className="zone-holder">
           <div className="border"></div>
           <div className="zones">Zones</div>
-        </div>
-
-        <div class="zones2">
-            {lists.map((list) => (
-                <ZoneBlock 
-                name={list['name']}
-                id={list['id']}
-                />
-            ))}
+            <div class="zones2">
+                {lists.map((list) => (
+                    <ZoneBlock 
+                    name={list['name']}
+                    id={list['id']}
+                    />
+                ))}
+            </div>
         </div>
         </>
     )

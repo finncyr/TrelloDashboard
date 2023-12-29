@@ -285,7 +285,7 @@ app.get("/api/lists/:listid", (req, res, next) => {
           if(el['dueComplete']) {
             countclosed++;
           }
-          if(Date.parse(el['due']) - Date.now() < 0) {
+          if(Date.parse(el['due']) - Date.now() < 0 && !el['dueComplete']) {
             overtimed++;
           }
           members = members.concat(el['idMembers']);
@@ -483,7 +483,7 @@ app.get("/api/board/ru", (req, res, next) => {
                   const dur_label = durations.filter(function (duration) { //get duration of card by label
                     return duration['id'] == label['id'];
                   });
-                  timeplanned += parseInt(dur_label[0]['name']);
+                  timeplanned += parseInt(dur_label[0]['name']) * el['idMembers'].length;
                   break;
                 }
               }
@@ -551,27 +551,41 @@ app.get("/api/board/spi", (req, res, next) => {
 
 app.get("/api/members", (req, res, next) => {
   // #swagger.description = 'Returns all members on the board'
-  trello.getBoardMembers(req.cookies.boardid)
-  .then((members) => {
-    trello.getCardsOnBoard(req.cookies.boardid)
-    .then((cards) => {
-      var timecards = [];
-      cards.forEach(el => {
-        if(el['name'].includes("TIMECARD")) {
-          timecards.push(el);
-        }
-      });
-      var timemembers = [];
-      members.forEach(el => {
-        var availabletime = 0;
-        timecards.forEach(card => {
-          if(card['idMembers'].includes(el['id'])) {
-            availabletime += parseInt(card['desc']);
-          }
-        });
-        timemembers.push({id: el['id'], fullName: el['fullName'], username: el['username'], availabletime: availabletime});
-      });
-      res.json(timemembers);
+  trello.getLabelsForBoard(req.cookies.boardid)  //load all required data
+  .then((durations) => {
+    trello.getListsOnBoard(req.cookies.boardid)
+    .then((alllists) => {
+      trello.getBoardMembers(req.cookies.boardid)
+      .then((members) => {
+        trello.getCardsOnBoard(req.cookies.boardid)
+        .then((cards) => {
+          const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id'];
+          var timemembers = [];
+          members.forEach(el => {
+            var availabletime = 0;
+            var usedtime = 0;
+            cards.forEach(card => {
+              if(card['idMembers'].includes(el['id']) && card['name'].includes("TIMECARD")) {
+                availabletime += parseInt(card['desc']);
+              }
+              if(card['idList'] != infolistid && !card['name'].includes("TIMECARD")){ //ignore cards in info list and timecards
+                for(var label of card['labels']){
+                  const dur_label = durations.filter((duration) => duration['id'] == label['id']); //get duration of card by label
+                  const cardmembers = members.filter((member) => card['idMembers'].find((f) => f == member['id'])); //get members of card by id
+                  if(cardmembers.find(member => member['id'] == el['id'])) {
+                    usedtime += parseInt(dur_label[0]['name']);
+                  }
+                  break;
+                }
+              }
+            });
+            timemembers.push({id: el['id'], fullName: el['fullName'], username: el['username'], availabletime: availabletime, usedtime: usedtime});
+          });
+          res.json(timemembers);
+        })
+        .catch((err) => next(err));
+      })
+      .catch((err) => next(err));
     })
     .catch((err) => next(err));
   })

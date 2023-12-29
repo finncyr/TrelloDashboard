@@ -15,7 +15,7 @@ function MemberBlock (props) {
                     if(member['gravatarHash'] == null) {
                         member['gravatarHash'] = member['id'];
                       }
-                    var combinedmember = {...member, availabletime: el['availabletime']};
+                    var combinedmember = {...member, availabletime: el['availabletime'], usedtime: el['usedtime']};
                     setMembers(members => [...members, combinedmember]);
                 });
             });
@@ -35,6 +35,7 @@ function MemberBlock (props) {
                         <th>Picture</th>
                         <th>Name</th>
                         <th>Available</th>
+                        <th>Workload</th>
                     </thead>
                     
                     <tbody class="tablebody">
@@ -49,6 +50,7 @@ function MemberBlock (props) {
                             </td>
                             <td class="member-name">{member['fullName']}</td>
                             <td class="member-time">{minToTime(member['availabletime'])}h</td>
+                            <td class="member-workload">{Math.round((member['usedtime'] / member['availabletime']) * 100)}%</td>
                         </tr>
                     ))}
                     </tbody>

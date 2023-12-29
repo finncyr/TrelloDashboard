@@ -27,13 +27,15 @@ function App() {
         <div class="header"></div>
         <div class="trello-dash">TrelloDash</div>
         <div class="project-abcd">{!tr_title ? "No Project found!" : "Project: " + tr_title}</div>
-      </div>
-        <ProgressBlock />
         <URLPostInput />
-
-        <SPIMiniBlock />
-        <SVMiniBlock />
-        <RUMiniBlock />
+      </div>
+      <div class="body-content">
+        <ProgressBlock />
+        <div class="mini-blocks">
+          <SPIMiniBlock />
+          <SVMiniBlock />
+          <RUMiniBlock />
+        </div>
 
         <MemberBlock />
 
@@ -41,6 +43,7 @@ function App() {
 
         <TaskBlock />
       </div>
+    </div>
 
   );
 }
