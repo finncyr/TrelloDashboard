@@ -22,6 +22,7 @@ function App() {
   }, []);
 
   return (
+    <>
     <div class="main-dash">
       <div class="header-bar">
         <div class="header"></div>
@@ -42,8 +43,11 @@ function App() {
         <ZoneWrapper />
 
         <TaskBlock />
+
+        <div class="footer"><a href="/api-docs">visit the api documentation</a></div>
       </div>
     </div>
+    </>
 
   );
 }

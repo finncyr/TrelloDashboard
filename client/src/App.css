@@ -7,7 +7,7 @@
   width: inherit;
   min-width: 1440px;
   height: max-content;
-  min-height: 720px;
+  min-height: 775px;
   position: relative;
   overflow: auto;
 }
@@ -99,7 +99,7 @@
     left: 50%;
     transform: translate(-50%);
     width: 80%;
-    min-height: 680px;
+    min-height: 720px;
     top: 55px;
     padding: 25px;
 }
@@ -959,4 +959,23 @@
   left: 432px;
   top: 196px;
   overflow: visible;
+}
+
+.footer {
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  top: 40px;
+  display: flex;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+}
+.footer a{
+  color: #626262;
+  text-align: center;
+  font: 200 15px "Inter", sans-serif;
 }
