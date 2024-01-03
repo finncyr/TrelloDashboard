@@ -3,13 +3,20 @@
   "info": {
     "title": "TrelloDash API",
     "description": "Trello-API-Extension for the TrelloDashboard",
-    "version": "0.6.0"
+    "version": "1.0.1"
   },
   "host": "localhost:3001",
   "basePath": "/",
+  "tags": [
+    {
+      "name": "",
+      "description": ""
+    }
+  ],
   "schemes": [
     "http"
   ],
+  "securityDefinitions": {},
   "paths": {
     "/api/setboard": {
       "post": {
@@ -51,7 +58,14 @@
         "description": "Returns the title of the board",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Title of the board as string",
+            "schema": {
+              "type": "string",
+              "example": "Example Board",
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -61,7 +75,14 @@
         "description": "Returns the amount of all open tasks on the board",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Amount of open tasks as integer",
+            "schema": {
+              "type": "number",
+              "example": 22,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -71,7 +92,14 @@
         "description": "Returns the amount of all closed tasks on the board",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Amount of closed tasks as integer",
+            "schema": {
+              "type": "number",
+              "example": 11,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -81,7 +109,14 @@
         "description": "Returns the amount of all tasks on the board",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Amount of all tasks as integer",
+            "schema": {
+              "type": "number",
+              "example": 33,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -91,7 +126,16 @@
         "description": "Returns all cards on the board",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Array of all cards on the board",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Card"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -109,7 +153,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Specific card on the board",
+            "schema": {
+              "$ref": "#/definitions/Card"
+            }
           }
         }
       }
@@ -127,14 +174,21 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Duration of a specific card on the board in minutes",
+            "schema": {
+              "type": "number",
+              "example": 15,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/api/cards/{cardid}/due": {
       "get": {
-        "description": "Returns the due time of a specific card on the board in UNIX-Timecode",
+        "description": "Returns the due time of a specific card on the board in ms since 1970-01-01",
         "parameters": [
           {
             "name": "cardid",
@@ -145,14 +199,21 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Due time of a specific card on the board in ms since 1970-01-01",
+            "schema": {
+              "type": "number",
+              "example": 1704380400000,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/api/cards/{cardid}/overdue": {
       "get": {
-        "description": "Returns the overtime of a specific card on the board in UNIX-Timecode",
+        "description": "Returns the overtime of a specific card on the board in ms. Negative Values mean the card is overdue by that amount of milliseconds. Positive Values mean the card is due in that amount of milliseconds",
         "parameters": [
           {
             "name": "cardid",
@@ -163,17 +224,33 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Overtime of a specific card on the board in ms",
+            "schema": {
+              "type": "number",
+              "example": 900000,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/api/criticaltasks": {
       "get": {
-        "description": "Returns a list of all critical tasks on the board",
+        "description": "Returns a list of all tasks marked with a \"CRITICAL\" label on the board",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Array of all critical tasks on the board",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Card"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -183,7 +260,16 @@
         "description": "Returns all lists on the board",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Array of all lists on the board",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/List"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -201,7 +287,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Specific list on the board",
+            "schema": {
+              "$ref": "#/definitions/List"
+            }
           }
         }
       }
@@ -219,7 +308,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Specific list name on the board as string",
+            "schema": {
+              "type": "string",
+              "example": "To Do",
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -237,14 +333,21 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Amount of all cards on a specific list on the board as integer",
+            "schema": {
+              "type": "number",
+              "example": 8,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/api/lists/{listid}/countclosed": {
       "get": {
-        "description": "Returns the amount of all closed cards on a specific list on the board",
+        "description": "Returns the amount of all cards with a due marked as complete on a specific list on the board",
         "parameters": [
           {
             "name": "listid",
@@ -255,14 +358,21 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Amount of all closed cards on a specific list on the board as integer",
+            "schema": {
+              "type": "number",
+              "example": 4,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/api/lists/{listid}/members": {
       "get": {
-        "description": "Returns an array of all members on a specific list on the board",
+        "description": "Returns an array of all member id",
         "parameters": [
           {
             "name": "listid",
@@ -280,7 +390,7 @@
     },
     "/api/lists/{listid}/overtimed": {
       "get": {
-        "description": "Returns an array of all overtimed cards on a specific list on the board",
+        "description": "Returns an array of all overtimed cards on a specific list on the board. Complete cards are included.",
         "parameters": [
           {
             "name": "listid",
@@ -291,7 +401,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Array of all overtimed cards on a specific list on the board",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Card"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -309,7 +428,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "True if any card on a specific list on the board is overtimed",
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -327,7 +453,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Summed and rounded Schedule Variance of a specific list on the board in minutes",
+            "schema": {
+              "type": "number",
+              "example": 14,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -337,7 +470,14 @@
         "description": "Returns the average Schedule Variance per card of the whole board in remaining minutes",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Average Schedule Variance per card of the whole board in rounded remaining minutes",
+            "schema": {
+              "type": "number",
+              "example": 16,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -347,7 +487,14 @@
         "description": "Returns the summed Resource Utilization of the whole board in decimal notation",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Decimal Resource Utilization of the whole board",
+            "schema": {
+              "type": "number",
+              "example": 0.85,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -357,24 +504,40 @@
         "description": "Returns the summed Schedule Performance Index of the whole board in decimal notation",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Decimal Schedule Performance Index of the whole board",
+            "schema": {
+              "type": "number",
+              "example": 0.9,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/api/members": {
       "get": {
-        "description": "Returns all members on the board",
+        "description": "Returns all compact array of all members on the board",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Array of all members on the board in a compacted array",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CompactMember"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/api/members/{memberid}": {
       "get": {
-        "description": "Returns a specific member on the board",
+        "description": "Returns a detailed specific member on the board",
         "parameters": [
           {
             "name": "memberid",
@@ -385,7 +548,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Detailed specific member on the board",
+            "schema": {
+              "$ref": "#/definitions/Member"
+            }
           }
         }
       }
@@ -403,7 +569,14 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Available time of a specific member on the board in minutes",
+            "schema": {
+              "type": "number",
+              "example": 120,
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -413,7 +586,16 @@
         "description": "Returns an array of all timecards on the board",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Array of all cards including \"TIMECARD\" in their name on the board",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Card"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -423,7 +605,578 @@
         "description": "Returns the planned time (PV) of the whole board in minutes",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Planned time (PV) of the whole board in rounded minutes",
+            "schema": {
+              "type": "number",
+              "example": 450,
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "definitions": {
+      "type": "object",
+      "properties": {
+        "Card": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "648efa9d3ca556526f67abcd"
+            },
+            "badges": {
+              "type": "object",
+              "properties": {
+                "attachmentsByType": {
+                  "type": "object",
+                  "properties": {
+                    "trello": {
+                      "type": "object",
+                      "properties": {
+                        "board": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "card": {
+                          "type": "number",
+                          "example": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "location": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "votes": {
+                  "type": "number",
+                  "example": 0
+                },
+                "viewingMemberVoted": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "subscribed": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "fogbugz": {
+                  "type": "string",
+                  "example": ""
+                },
+                "checkItems": {
+                  "type": "number",
+                  "example": 0
+                },
+                "checkItemsChecked": {
+                  "type": "number",
+                  "example": 0
+                },
+                "checkItemsEarliestDue": {},
+                "comments": {
+                  "type": "number",
+                  "example": 0
+                },
+                "attachments": {
+                  "type": "number",
+                  "example": 0
+                },
+                "description": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "due": {
+                  "type": "string",
+                  "example": "2024-01-01T15:00:00.000Z"
+                },
+                "dueComplete": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "start": {}
+              }
+            },
+            "checkItemStates": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "closed": {
+              "type": "boolean",
+              "example": false
+            },
+            "dueComplete": {
+              "type": "boolean",
+              "example": false
+            },
+            "dateLastActivity": {
+              "type": "string",
+              "example": "2024-01-01T09:05:39.972Z"
+            },
+            "desc": {
+              "type": "string",
+              "example": ""
+            },
+            "descData": {
+              "type": "object",
+              "properties": {
+                "emoji": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "due": {
+              "type": "string",
+              "example": "2024-01-01T15:00:00.000Z"
+            },
+            "dueReminder": {
+              "type": "number",
+              "example": -1
+            },
+            "email": {},
+            "idBoard": {
+              "type": "string",
+              "example": "5f07168df739986764e3405c"
+            },
+            "idChecklists": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "idList": {
+              "type": "string",
+              "example": "5f07168d9e057453845cfe88"
+            },
+            "idMembers": {
+              "type": "array",
+              "example": [
+                "658c548ebef9b545a8b93abc",
+                "65926b1937473c188d0c9def"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "idMembersVoted": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "idShort": {
+              "type": "number",
+              "example": 5
+            },
+            "idAttachmentCover": {},
+            "labels": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "5f07168df1bb5752f6b149df"
+                  },
+                  "idBoard": {
+                    "type": "string",
+                    "example": "5f07168df739986764e3405c"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "30 min"
+                  },
+                  "color": {
+                    "type": "string",
+                    "example": "yellow"
+                  },
+                  "uses": {
+                    "type": "number",
+                    "example": 6
+                  }
+                }
+              }
+            },
+            "idLabels": {
+              "type": "array",
+              "example": [
+                "5f07168df1bb5752f6b149df"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "manualCoverAttachment": {
+              "type": "boolean",
+              "example": false
+            },
+            "name": {
+              "type": "string",
+              "example": "Testcard"
+            },
+            "pos": {
+              "type": "number",
+              "example": 262143
+            },
+            "shortLink": {
+              "type": "string",
+              "example": "3E0lvPPe"
+            },
+            "shortUrl": {
+              "type": "string",
+              "example": "https://trello.com/c/3E0lvPPe"
+            },
+            "start": {},
+            "subscribed": {
+              "type": "boolean",
+              "example": false
+            },
+            "url": {
+              "type": "string",
+              "example": "https://trello.com/c/3E0lvPPe/5-lkw-ausladen"
+            },
+            "cover": {
+              "type": "object",
+              "properties": {
+                "idAttachment": {},
+                "color": {},
+                "idUploadedBackground": {},
+                "size": {
+                  "type": "string",
+                  "example": "normal"
+                },
+                "brightness": {
+                  "type": "string",
+                  "example": "dark"
+                },
+                "idPlugin": {}
+              }
+            },
+            "isTemplate": {
+              "type": "boolean",
+              "example": false
+            },
+            "cardRole": {}
+          }
+        },
+        "List": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "5f07168d9e057453845abcdef"
+            },
+            "name": {
+              "type": "string",
+              "example": "Testlist"
+            },
+            "closed": {
+              "type": "boolean",
+              "example": false
+            },
+            "color": {},
+            "idBoard": {
+              "type": "string",
+              "example": "5f07168df739986764e3405c"
+            },
+            "pos": {
+              "type": "number",
+              "example": 0.5
+            },
+            "subscribed": {
+              "type": "boolean",
+              "example": false
+            },
+            "softLimit": {},
+            "creationMethod": {
+              "type": "string",
+              "example": "assisted"
+            },
+            "idOrganization": {
+              "type": "string",
+              "example": "5f0716d07faa1c37b3bf873c"
+            },
+            "limits": {
+              "type": "object",
+              "properties": {
+                "cards": {
+                  "type": "object",
+                  "properties": {
+                    "openPerList": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "ok"
+                        },
+                        "disableAt": {
+                          "type": "number",
+                          "example": 5000
+                        },
+                        "warnAt": {
+                          "type": "number",
+                          "example": 4000
+                        }
+                      }
+                    },
+                    "totalPerList": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "ok"
+                        },
+                        "disableAt": {
+                          "type": "number",
+                          "example": 1000000
+                        },
+                        "warnAt": {
+                          "type": "number",
+                          "example": 800000
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "nodeId": {
+              "type": "string",
+              "example": "ari:cloud:trello::list/workspace/5f0716d07faa1c37b3bf873c/5f07168d9e057453845cfe88"
+            }
+          }
+        },
+        "CompactMember": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "658c402f25e12fdc0cc93abc"
+            },
+            "fullName": {
+              "type": "string",
+              "example": "Max Mustermann"
+            },
+            "username": {
+              "type": "string",
+              "example": "mmustermann"
+            },
+            "availabletime": {
+              "type": "number",
+              "example": 180
+            },
+            "usedtime": {
+              "type": "number",
+              "example": 125
+            }
+          }
+        },
+        "Member": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "658c402f25e12fdc0cc93abc"
+            },
+            "aaId": {
+              "type": "string",
+              "example": "712020:afe6f804-1de8-43ba-a4c5-6564f560a743"
+            },
+            "activityBlocked": {
+              "type": "boolean",
+              "example": false
+            },
+            "avatarHash": {
+              "type": "string",
+              "example": "ffb1e218065afd301772fccb0520abcd"
+            },
+            "avatarUrl": {
+              "type": "string",
+              "example": "https://trello-members.s3.amazonaws.com/658c402f25e12fdc0cc935b9/ffb1e218065afd301772fccb0520abcd"
+            },
+            "bio": {
+              "type": "string",
+              "example": ""
+            },
+            "bioData": {},
+            "confirmed": {
+              "type": "boolean",
+              "example": true
+            },
+            "fullName": {
+              "type": "string",
+              "example": "Max Mustermann"
+            },
+            "idEnterprise": {},
+            "idEnterprisesDeactivated": {},
+            "idMemberReferrer": {},
+            "idPremOrgsAdmin": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "initials": {
+              "type": "string",
+              "example": "MM"
+            },
+            "memberType": {
+              "type": "string",
+              "example": "normal"
+            },
+            "nonPublic": {
+              "type": "object",
+              "properties": {}
+            },
+            "nonPublicAvailable": {
+              "type": "boolean",
+              "example": true
+            },
+            "products": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "url": {
+              "type": "string",
+              "example": "https://trello.com/mmustermann"
+            },
+            "username": {
+              "type": "string",
+              "example": "mmustermann"
+            },
+            "status": {
+              "type": "string",
+              "example": "disconnected"
+            },
+            "aaBlockSyncUntil": {},
+            "aaEmail": {},
+            "aaEnrolledDate": {},
+            "avatarSource": {},
+            "credentialsRemovedCount": {},
+            "domainClaimed": {},
+            "email": {},
+            "gravatarHash": {},
+            "idBoards": {
+              "type": "array",
+              "example": [
+                "5f07168df739986764e3abcd"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "idOrganizations": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "idEnterprisesAdmin": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "limits": {
+              "type": "object",
+              "properties": {
+                "boards": {
+                  "type": "object",
+                  "properties": {
+                    "totalPerMember": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "ok"
+                        },
+                        "disableAt": {
+                          "type": "number",
+                          "example": 4500
+                        },
+                        "warnAt": {
+                          "type": "number",
+                          "example": 3600
+                        }
+                      }
+                    }
+                  }
+                },
+                "orgs": {
+                  "type": "object",
+                  "properties": {
+                    "totalPerMember": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "ok"
+                        },
+                        "disableAt": {
+                          "type": "number",
+                          "example": 850
+                        },
+                        "warnAt": {
+                          "type": "number",
+                          "example": 680
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "loginTypes": {},
+            "marketingOptIn": {},
+            "messagesDismissed": {},
+            "nodeId": {
+              "type": "string",
+              "example": "ari:cloud:trello::user/658c402f25e12fdc0cc93abc"
+            },
+            "oneTimeMessagesDismissed": {},
+            "sessionType": {},
+            "prefs": {},
+            "trophies": {
+              "type": "array",
+              "example": [],
+              "items": {}
+            },
+            "uploadedAvatarHash": {},
+            "uploadedAvatarUrl": {},
+            "premiumFeatures": {
+              "type": "array",
+              "example": [
+                "additionalBoardBackgrounds",
+                "additionalStickers",
+                "customBoardBackgrounds",
+                "customEmoji",
+                "customStickers",
+                "plugins"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "isAaMastered": {
+              "type": "boolean",
+              "example": true
+            },
+            "ixUpdate": {
+              "type": "string",
+              "example": "44"
+            }
+          }
+        },
+        "ListMembers": {
+          "type": "array",
+          "example": [
+            "658c402f25e12fdc0cc93abc"
+          ],
+          "items": {
+            "type": "string"
           }
         }
       }
