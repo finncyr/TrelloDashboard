@@ -98,6 +98,32 @@ app.get("/api/title", (req, res) => {
 
 // ---- COUNTS ----
 
+app.get("/api/counts/", async (req, res, next) => {
+  const [alllists, cards] = await Promise.all([
+    trello.getListsOnBoard(req.cookies.boardid), 
+    trello.getCardsOnBoard(req.cookies.boardid)
+  ]).catch((err) => next(err));
+  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
+  var counts = {
+    alltasks: 0,
+    closedtasks: 0,
+    opentasks: 0
+  };
+
+  cards.forEach(el => {
+    if((el['idList'] != infolistid && el['due'] != null)) { //ignore cards in info list
+      counts.alltasks++;
+      if(el['dueComplete']) { //ignore cards in info list & done cards
+        counts.closedtasks++;
+      }
+      else {
+        counts.opentasks++;
+      }
+    }
+  });
+  res.json(counts);
+});
+
 app.get("/api/counts/opentasks", async (req, res, next) => {
   // #swagger.description = 'Returns the amount of all open tasks on the board'
   /* #swagger.responses[200] = {
@@ -269,6 +295,13 @@ app.get("/api/criticaltasks", async (req, res, next) => {
     });
   });
   res.json(criticaltasks);
+});
+
+app.get("/api/cards/:cardid/:value", (req, res, next) => {
+  // #swagger.description = 'Returns a specific value of a card on the board'
+  trello.getCard(req.cookies.boardid, req.params.cardid)
+    .then((card) => res.json(card[req.params.value]))
+    .catch((err) => next(err));
 });
 
 // ---- LISTS ----
@@ -471,6 +504,15 @@ app.get("/api/lists/:listid/sv", async (req, res, next) => {
   res.json(Math.round(sv/60000));
 });
 
+app.get("/api/lists/:listid/:value", async (req, res, next) => {
+  // #swagger.description = 'Tries to returns a specific value of a specific list on the board'
+  trello.getListsOnBoard(req.cookies.boardid)
+    .then((lists) => {
+      const list = (lists.filter((el) => el.id == req.params.listid))[0]; //get requested list
+      res.json(list[req.params.value]);
+    })
+    .catch((err) => next(err));
+});
 
 
 // ---- BOARD ----
@@ -661,6 +703,15 @@ app.get("/api/members/:memberid/availabletime", (req, res, next) => {
     .catch((err) => next(err));
 });
 
+app.get("/api/members/:memberid/:value", (req, res, next) => {
+  // #swagger.description = 'Returns a value of a specific member on the board'
+  trello.getMember(req.params.memberid)
+    .then((member) => {
+      res.json(member[req.params.value]);
+    })
+    .catch((err) => next(err));
+});
+
 // ---- TIMEVALUES ----
 
 app.get("/api/timecards", (req, res) => {
@@ -696,7 +747,7 @@ app.get("/api/timeplanned", async (req, res, next) => {
   ]).catch((err) => next(err));
   var plannedtime = 0;
   const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
-  
+
   cards.forEach(el => {
     if(el['idList'] != infolistid && !el['name'].includes("TIMECARD") && !el['dueComplete'] && el['due'] != null){ //ignore cards in info list and done cards
       var cardduaration = 0;
