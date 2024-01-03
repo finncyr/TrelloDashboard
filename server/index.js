@@ -382,10 +382,7 @@ app.get("/api/lists/:listid/name", (req, res, next) => {
     } */
   trello.getListsOnBoard(req.cookies.boardid)
     .then((lists) => {
-      const list = lists.filter(function(el){
-        return el['id'] == req.params.listid;
-      });
-      res.json(list[0]['name']);
+      res.json(lists.filter(el => el['id'] == req.params.listid)[0]['name']);
     })
     .catch((err) => next(err));
 });
