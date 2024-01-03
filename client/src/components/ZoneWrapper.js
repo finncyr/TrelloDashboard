@@ -14,7 +14,7 @@ function ZoneWrapper (props) {
             });
             setLists(filteredlists);
         });
-    });
+    }, []);
       
     return(
         <>

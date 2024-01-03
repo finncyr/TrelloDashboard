@@ -116,11 +116,9 @@ app.get("/api/counts/", async (req, res, next) => {
       if(el['dueComplete']) { //ignore cards in info list & done cards
         counts.closedtasks++;
       }
-      else {
-        counts.opentasks++;
-      }
     }
   });
+  counts.opentasks = counts.alltasks - counts.closedtasks;
   res.json(counts);
 });
 
