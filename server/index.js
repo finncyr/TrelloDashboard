@@ -91,8 +91,30 @@ app.get("/api/title", (req, res) => {
     res.json({ message: "" });
   }
   else {
-    var URLsplit = req.cookies.url.split("/");
-    res.json({ message: URLsplit[URLsplit.length - 1] });
+    fetch(req.cookies.url + ".json")
+    .then((trellores) => {
+      if(trellores.status == 200) {
+        return trellores.json();
+      }
+      else {
+        return null;
+      }
+    })
+    .then((board) => {
+      if (board == null) {
+        res.status(404).send("Error: Board not found on Trello!");
+        console.log("Board not found on Trello!");
+        // #swagger.responses[404] = { description: 'Board not found on Trello' }
+      }
+      else {
+        res.json({ message: board['name'] });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send("Error: " + err);
+      console.log("Error: " + err);
+      // #swagger.responses[500] = { description: 'Internal Server Error' }
+    });
   }
 });
 
