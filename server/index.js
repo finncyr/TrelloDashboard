@@ -121,6 +121,10 @@ app.get("/api/title", (req, res) => {
 // ---- COUNTS ----
 
 app.get("/api/counts/", async (req, res, next) => {
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid), 
     trello.getCardsOnBoard(req.cookies.boardid)
@@ -150,6 +154,10 @@ app.get("/api/counts/opentasks", async (req, res, next) => {
             description: 'Amount of open tasks as integer',
             schema: 22
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid), 
     trello.getCardsOnBoard(req.cookies.boardid)
@@ -170,6 +178,10 @@ app.get("/api/counts/closedtasks", async (req, res, next) => {
             description: 'Amount of closed tasks as integer',
             schema: 11
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid), 
     trello.getCardsOnBoard(req.cookies.boardid)
@@ -190,6 +202,10 @@ app.get("/api/counts/alltasks", async (req, res, next) => {
             description: 'Amount of all tasks as integer',
             schema: 33
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid), 
     trello.getCardsOnBoard(req.cookies.boardid)
@@ -214,6 +230,10 @@ app.get("/api/cards", (req, res, next) => {
                 { $ref: '#/definitions/Card' }
             ]
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   trello.getCardsOnBoard(req.cookies.boardid)
     .then((cards) => res.json(cards))
     .catch((err) => next(err));
@@ -225,6 +245,10 @@ app.get("/api/cards/:cardid", (req, res, next) => {
             description: 'Specific card on the board',
             schema: { $ref: '#/definitions/Card' }
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   trello.getCard(req.cookies.boardid, req.params.cardid)
     .then((card) => res.json(card))
     .catch((err) => next(err));
@@ -288,6 +312,10 @@ app.get("/api/criticaltasks", async (req, res, next) => {
               { $ref: '#/definitions/Card' }
             ]
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid), 
     trello.getCardsOnBoard(req.cookies.boardid)
@@ -347,6 +375,10 @@ app.get("/api/lists/:listid", async (req, res, next) => {
             description: 'Specific list on the board',
             schema: { $ref: '#/definitions/List' }
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   var listname = "";
   var countall = 0;
   var countclosed = 0;
@@ -501,6 +533,10 @@ app.get("/api/lists/:listid/sv", async (req, res, next) => {
             description: 'Summed and rounded Schedule Variance of a specific list on the board in minutes',
             schema: 14
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   const [durations, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid), 
     trello.getCardsOnList(req.params.listid)
@@ -540,6 +576,10 @@ app.get("/api/board/sv", async (req, res, next) => {
             description: 'Average Schedule Variance per card of the whole board in rounded remaining minutes',
             schema: 16
     } */
+  if (!req.cookies.boardid) {
+    res.json(0);
+    return;
+  }
   const [durations, alllists, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid), 
     trello.getListsOnBoard(req.cookies.boardid), 
@@ -573,6 +613,10 @@ app.get("/api/board/ru", async (req, res, next) => {
             description: 'Decimal Resource Utilization of the whole board',
             schema: 0.85
     } */
+  if (!req.cookies.boardid) {
+    res.json(0);
+    return;
+  }
   const [durations, alllists, members, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid), 
     trello.getListsOnBoard(req.cookies.boardid), 
@@ -613,6 +657,10 @@ app.get("/api/board/spi", async (req, res, next) => {
             description: 'Decimal Schedule Performance Index of the whole board',
             schema: 0.90
     } */
+  if (!req.cookies.boardid) {
+    res.json(0);
+    return;
+  }
   const [durations, alllists, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid),
     trello.getListsOnBoard(req.cookies.boardid),
@@ -655,6 +703,10 @@ app.get("/api/members", async (req, res, next) => {
                 { $ref: '#/definitions/CompactMember' }
             ]
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   const [durations, alllists, members, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid), 
     trello.getListsOnBoard(req.cookies.boardid), 
@@ -757,6 +809,10 @@ app.get("/api/timeplanned", async (req, res, next) => {
             description: 'Planned time (PV) of the whole board in rounded minutes',
             schema: 450
     } */
+  if (!req.cookies.boardid) {
+    res.json({ message: "" });
+    return;
+  }
   const [durations, alllists, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid), 
     trello.getListsOnBoard(req.cookies.boardid), 
