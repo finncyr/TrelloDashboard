@@ -15,7 +15,8 @@ function SVMiniBlock (props) {
         <div class="sv-block" title="Average remaining Time in Minutes until all tasks must have started to meet the deadline">
             <div class="rectangle-4"></div>
             <div class="sv" title="Average Schedule Variance">ASV</div>
-            <div class="_1-2" style={{color: sv >= 0 ? "#1bae18" : "#ae1818"}}>{sv + "\nmin"}</div>
+            <div class="_1-2" style={{color: sv >= 0 ? "#1bae18" : "#ae1818",
+                                      top: sv < 1000 ? "76px" : "55px"}}>{sv + "\nmin"}</div>
         </div>
         </>
     )
