@@ -570,7 +570,7 @@ app.get("/api/lists/:listid/:value", async (req, res, next) => {
 
 // ---- BOARD ----
 
-app.get("/api/board/sv", async (req, res, next) => {
+app.get("/api/board/ast", async (req, res, next) => {
   // #swagger.description = 'Returns the average Schedule Variance per card of the whole board in remaining minutes'
   /* #swagger.responses[200] = {
             description: 'Average Schedule Variance per card of the whole board in rounded remaining minutes',
@@ -604,6 +604,48 @@ app.get("/api/board/sv", async (req, res, next) => {
     }
   });
   res.json(Math.round((sv/60000)/cards.length)); //return sv in minutes
+});
+
+app.get("/api/board/sv", async (req, res, next) => {
+  // #swagger.description = 'Returns the summed Schedule Variance of the whole board in minutes'
+  /* #swagger.responses[200] = {
+            description: 'Decimal Schedule Variance of the whole board. Negative Values mean the board is behind schedule.',
+            schema: 15
+    } */
+  if (!req.cookies.boardid) {
+    res.json(0);
+    return;
+  }
+  const [durations, alllists, cards] = await Promise.all([
+    trello.getLabelsForBoard(req.cookies.boardid),
+    trello.getListsOnBoard(req.cookies.boardid),
+    trello.getCardsOnBoard(req.cookies.boardid)
+  ]).catch((err) => next(err));
+
+  var donetime = 0;
+  var timeplanned = 0;
+
+  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of info list
+
+  cards.forEach(card => {
+    if ((Date.parse(card['due']) - Date.now()) <= 0 && //if card is due
+      !card['name'].includes("TIMECARD") &&            //and not a timecard
+      card['idList'] != infolistid) {                  //and not in info list
+      var cardduaration = 0;
+      for (var label of card['labels']) {
+        const dur_label = durations.filter(function (duration) { //get duration of card by label
+          return duration['id'] == label['id'];
+        });
+        cardduaration = parseInt(dur_label[0]['name']);
+        break;
+      }
+      if (card['dueComplete']) { //if card is marked as done
+        donetime += cardduaration;
+      }
+      timeplanned += cardduaration;
+    }
+  });
+  res.json(donetime - timeplanned); //return sv in minutes
 });
 
 

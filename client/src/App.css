@@ -225,10 +225,10 @@
 }
 .sv {
   color: #000000;
-  text-align: left;
+  text-align: center;
   font: 600 32px "Inter", sans-serif;
   position: absolute;
-  left: calc(50% - 32px);
+  width: inherit;
   top: 8px;
 }
 ._1-2 {
@@ -238,7 +238,7 @@
   position: absolute;
   left: 0px;
   top: 55px;
-  width: 132px;
+  width: 128px;
 }
 .ru-mini-block {
   width: 132px;
