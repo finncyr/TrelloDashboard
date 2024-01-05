@@ -8,6 +8,8 @@ const dotenv = require('dotenv');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('../swagger-output.json');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const apicache = require('apicache');
 
 // Configuartions
 dotenv.config();
@@ -26,6 +28,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Middlewares
 app.use(express.json()); //JSON Parser for POST/PUT Requests
 app.use(cookieParser()); //Cookie Parser for BoardID
+app.use(morgan('dev')); //Morgan for Logging
+
+let cache = apicache.middleware;
+app.use(cache('1 minutes'));
 
 
 // ---- ROUTES ----
@@ -60,8 +66,8 @@ app.post("/api/setboard", (req, res) => {
         }
         else if(board['id'] != null && board['id'] != "") {
           boardid = board['id'];
-          res.cookie("boardid", board['id']).cookie("url", req.body['url']).send("Board ID changed to: " + board['id']);
-          console.log("Session changed to: " + board['id']);
+          res.cookie("boardid", board['id'], {maxAge: 7200000}).cookie("name", board['name'], {maxAge: 7200000}).send("Board ID changed to: " + board['id']);
+          console.log("Session changed to: " + board['id']); 
         }
       });
   }
@@ -87,34 +93,11 @@ app.get("/api/title", (req, res) => {
             schema: "Example Board"
     } 
   */
-  if (req.cookies.url == null) {
+  if (req.cookies.name == null) {
     res.json({ message: "" });
   }
   else {
-    fetch(req.cookies.url + ".json")
-    .then((trellores) => {
-      if(trellores.status == 200) {
-        return trellores.json();
-      }
-      else {
-        return null;
-      }
-    })
-    .then((board) => {
-      if (board == null) {
-        res.status(404).send("Error: Board not found on Trello!");
-        console.log("Board not found on Trello!");
-        // #swagger.responses[404] = { description: 'Board not found on Trello' }
-      }
-      else {
-        res.json({ message: board['name'] });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send("Error: " + err);
-      console.log("Error: " + err);
-      // #swagger.responses[500] = { description: 'Internal Server Error' }
-    });
+    res.json({ message: req.cookies.name });
   }
 });
 
