@@ -31,7 +31,7 @@ app.use(cookieParser()); //Cookie Parser for BoardID
 app.use(morgan('dev')); //Morgan for Logging
 
 let cache = apicache.middleware;
-app.use(cache('1 minutes'));
+app.use(cache('30 seconds'));
 
 
 // ---- ROUTES ----

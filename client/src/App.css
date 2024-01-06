@@ -236,9 +236,13 @@
   text-align: center;
   font: 600 32px "Inter", sans-serif;
   position: absolute;
-  left: 0px;
+  left: 1px;
   top: 55px;
   width: 128px;
+  height: 78px;
+  display: grid;
+  align-items: center;
+  align-content: center;
 }
 .ru-mini-block {
   width: 132px;
