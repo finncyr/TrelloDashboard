@@ -54,7 +54,7 @@ function MemberBlock (props) {
                             <td>
                                 <img 
                                     class="ellipse-1"
-                                    alt='member picture'
+                                    alt='member'
                                     title={member['fullName']}
                                     src={getGravatarURL(member['email'], member['fullName'])} />
                             </td>

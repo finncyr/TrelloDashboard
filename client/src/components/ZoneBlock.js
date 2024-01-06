@@ -12,8 +12,8 @@ import {sha256} from 'js-sha256';
 
 function ZoneBlock (props) {
 
-  const [name, setName] = React.useState(props.name || "Unnamed Zone");
-  const [id, setId] = React.useState(props.id || 0);
+  const [name] = React.useState(props.name || "Unnamed Zone");
+  const [id] = React.useState(props.id || 0);
 
   const [allcards, setAllcards] = React.useState(0);
   const [closedcards, setClosedcards] = React.useState(0);
@@ -45,11 +45,11 @@ function ZoneBlock (props) {
             });
         });
       });
-  }, []);
+  }, [id]);
 
   React.useEffect(() => {
     setMaxwidth(maxRef.current.offsetWidth);
-  })
+  }, []);
 
       
     return(
@@ -67,6 +67,7 @@ function ZoneBlock (props) {
           {members.map((member) => (
               <img 
                 class="ellipse-1"
+                alt='member'
                 title={member['fullName']}
                 src={getGravatarURL(member['email'], member['fullName'])} />))}
           </div>
@@ -99,7 +100,7 @@ function criticalTaskBlock(criticaltask, criticalopen){
       </>
     )
   }
-  else if(criticaltask > 0 && criticalopen == 0){
+  else if(criticaltask > 0 && criticalopen === 0){
     return(
       <>
         <div class="rectangle-113"></div>
@@ -143,7 +144,7 @@ function criticalTaskBlock(criticaltask, criticalopen){
 }
 
 function overtimeBlock(overtimed) {
-  if(overtimed == 0){
+  if(overtimed === 0){
     return(
       <>
         <div class="rectangle-112"></div>

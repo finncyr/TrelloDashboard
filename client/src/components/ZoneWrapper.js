@@ -6,7 +6,7 @@
  * @author finncyr
  * @since  2023-11-20
  */
-import React, { Component } from 'react';
+import React from 'react';
 import ZoneBlock from './ZoneBlock.js';
 
 function ZoneWrapper (props) {
@@ -18,7 +18,7 @@ function ZoneWrapper (props) {
         .then((res) => res.json())
         .then((lists) => {
             const filteredlists = lists.filter(function(el){
-                return el.name != "INFO";
+                return el.name !== "INFO";
             });
             setLists(filteredlists);
         });

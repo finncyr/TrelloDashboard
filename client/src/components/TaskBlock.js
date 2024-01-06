@@ -52,7 +52,7 @@ function TaskBlock (props) {
               {task['members'].map((member) => (
                   <img 
                     class="ellipse-15"
-                    alt='member picture'
+                    alt='member'
                     title={member['fullName']}
                     src={getGravatarURL(member['email'], member['fullName'])} />))}
             </div>

@@ -6,7 +6,7 @@
  * @author finncyr
  * @since  2023-11-20
  */
-import React, { Component, useState } from 'react';
+import React from 'react';
 
 class URLPostInput extends React.Component {
     constructor(props) {
