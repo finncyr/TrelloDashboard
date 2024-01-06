@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 function ProgressBlock (props) {
 
@@ -15,7 +15,7 @@ function ProgressBlock (props) {
 
   React.useEffect(() => {
     setMaxwidth(maxRef.current.offsetWidth);
-  })
+  }, []);
 
   return(
     <div class="progress-block">

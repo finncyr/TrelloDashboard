@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import {sha256} from 'js-sha256';
 
 function ZoneBlock (props) {
 
@@ -28,8 +29,8 @@ function ZoneBlock (props) {
             fetch("/api/members/" + el)
             .then((res) => res.json())
             .then((member) => {
-              if(member['gravatarHash'] == null) {
-                member['gravatarHash'] = member['id'];
+              if(member['email'] == null) {
+                member['email'] = member['id'];
               }
               setMembers(members => [...members, member]);
             });
@@ -58,7 +59,7 @@ function ZoneBlock (props) {
               <img 
                 class="ellipse-1"
                 title={member['fullName']}
-                src={"https://gravatar.com/avatar/" + member['gravatarHash'] + "?d=retro"} />))}
+                src={getGravatarURL(member['email'], member['fullName'])} />))}
           </div>
           
           <div class="critical-task">
@@ -175,6 +176,13 @@ function overtimeBlock(overtimed) {
         </>
     )
   }
+}
+
+function getGravatarURL( email, fullName ) {
+  const address = String( email ).trim().toLowerCase();
+  const hash = sha256( address );
+  const namesplit = String( fullName ).split();
+  return `https://www.gravatar.com/avatar/${ hash }?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/${namesplit[0]}}/80/random`;
 }
 
 export default ZoneBlock;

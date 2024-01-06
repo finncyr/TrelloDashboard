@@ -656,7 +656,7 @@ app.get("/api/board/ru", async (req, res, next) => {
   var timeplanned = 0;
   var timeavailable = 0;
   cards.forEach(el => {
-    if(el['idList'] != infolistid && !el['dueComplete'] && el['due'] != null){ //ignore cards in info list and done cards
+    if(el['idList'] != infolistid && el['due'] != null){ //ignore cards in info list
       for(var label of el['labels']){
         const dur_label = durations.filter(function (duration) { //get duration of card by label
           return duration['id'] == label['id'];

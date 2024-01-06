@@ -7,7 +7,6 @@ import URLPostInput from "./components/URLPostInput.js";
 import SPIMiniBlock from "./components/SPIMiniBlock.js";
 import SVMiniBlock from "./components/SVMiniBlock.js";
 import RUMiniBlock from "./components/RUMiniBlock.js";
-import ZoneBlock from "./components/ZoneBlock.js";
 import TaskBlock from "./components/TaskBlock.js";
 import MemberBlock from "./components/MemberBlock.js";
 import ZoneWrapper from "./components/ZoneWrapper.js";

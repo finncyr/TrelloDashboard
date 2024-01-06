@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import {sha256} from 'crypto-hash';
+import React from 'react';
+import {sha256} from 'js-sha256';
 
 function TaskBlock (props) {
 
@@ -15,8 +15,8 @@ function TaskBlock (props) {
             fetch("/api/members/" + assignee)
             .then((res) => res.json())
             .then((member) => {
-                if(member['gravatarHash'] == null) {
-                  member['gravatarHash'] = member['id'];
+                if(member['email'] == null) {
+                  member['email'] = member['id'];
                 }
                 var combinedtask = {...el, members: [...members, member]};
                 setTasks(tasks => [...tasks, combinedtask]);
@@ -42,8 +42,9 @@ function TaskBlock (props) {
             {task['members'].map((member) => (
                 <img 
                   class="ellipse-15"
+                  alt='member picture'
                   title={member['fullName']}
-                  src={"https://gravatar.com/avatar/" + member['gravatarHash'] + "?d=retro"} />))}
+                  src={getGravatarURL(member['email'], member['fullName'])} />))}
               <div class="zone-label2">
                 <div class="zone-a2">{task['listname']}</div>
               </div>
@@ -83,11 +84,18 @@ function timeStringUntilDue(due, dueComplete) {
   else if (minutes > 0) {
     finalString = "due in " + minutes + " min";
   }
-  else if (minutes == 0){
+  else if (minutes === 0){
     finalString = "due now";
   }
 
   return finalString;
+}
+
+function getGravatarURL( email, fullName ) {
+  const address = String( email ).trim().toLowerCase();
+  const hash = sha256( address );
+  const namesplit = String( fullName ).split();
+  return `https://www.gravatar.com/avatar/${ hash }?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/${namesplit[0]}/80/random`;
 }
 
 export default TaskBlock;
