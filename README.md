@@ -5,7 +5,7 @@
 Trello Extension Dashboard for time-critical Project and Time-Management
 
 #### Requirements
-- node.js
+- node.js (tested and build on v18.17.0, verified on latest v21.5.0 & lts v20.10.0)
 
 ## Getting started
 
