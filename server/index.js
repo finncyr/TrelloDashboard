@@ -612,8 +612,8 @@ app.get("/api/board/sv", async (req, res, next) => {
 
   cards.forEach(card => {
     if ((card['due']) != null &&                                 //if card has a due date
-      !card['name'].includes("TIMECARD") &&                      //and not a timecard
-      card['idList'] != infolistid) {                            //and not in info list
+    !card['name'].includes("TIMECARD") &&                        //and not a timecard
+    card['idList'] != infolistid) {                              //and not in info list
       var cardduaration = 0;
       for (var label of card['labels']) {
         const dur_label = durations.filter(function (duration) { //get duration of card by label
@@ -698,15 +698,15 @@ app.get("/api/board/spi", async (req, res, next) => {
     trello.getCardsOnBoard(req.cookies.boardid)
   ]).catch((err) => next(err));
 
-  var donetime = 0;
-  var timeplanned = 0;
+  var EV = 0;
+  var PV = 0;
 
   const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of info list
 
   cards.forEach(card => {
-    if ((Date.parse(card['due']) - Date.now()) <= 0 && //if card is due
-      !card['name'].includes("TIMECARD") &&            //and not a timecard
-      card['idList'] != infolistid) {                  //and not in info list
+    if ((card['due']) != null &&                                 //if card has a due date
+    !card['name'].includes("TIMECARD") &&                        //and not a timecard
+    card['idList'] != infolistid) {                              //and not in info list
       var cardduaration = 0;
       for (var label of card['labels']) {
         const dur_label = durations.filter(function (duration) { //get duration of card by label
@@ -715,13 +715,19 @@ app.get("/api/board/spi", async (req, res, next) => {
         cardduaration = parseInt(dur_label[0]['name']);
         break;
       }
-      if (card['dueComplete']) { //if card is marked as done
-        donetime += cardduaration;
+      if (Date.parse(card['due']) - Date.now() <= 0 ) {          //if card is due or overdue
+        PV += cardduaration;                                     //it was planned to be done by now
+        if (card['dueComplete']) {                               //if this card is also marked as done
+          EV += cardduaration;                                   //the timing was matched, so Earned Value = Planned Value
+        }
       }
-      timeplanned += cardduaration;
+      else if(Date.parse(card['due']) - Date.now() > 0 &&        //if the card is not due yet
+      card['dueComplete']){                                      //but already completed   
+          EV += cardduaration;                                   //the tasks are in advance, so Earned Value > Planned Value
+      }
     }
   });
-  res.json(donetime / timeplanned); //return spi (Efficiency)
+  res.json(EV / PV); //return sv in minutes
 });
 
 // ---- MEMBERS ----
