@@ -909,11 +909,25 @@
   left: 463px;
   top: 7px;
 }
+.ellipse-15-group {
+  align-items: center;
+  display: flex;
+  flex-direction: row-reverse;
+  flex-shrink: 0;
+  gap: 4px;
+  justify-content: flex-start;
+  /* overflow: hidden; */
+  position: relative;
+  /* width: 50px; */
+  right: 300px;
+  /* height: 20px; */
+  flex-wrap: nowrap;
+}
+
 .ellipse-15 {
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  position: absolute;
   left: 0px;
   top: 0px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);

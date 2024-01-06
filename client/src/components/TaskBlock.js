@@ -9,19 +9,20 @@ function TaskBlock (props) {
     fetch("/api/criticaltasks")
     .then((res) => res.json())
     .then((criticaltasks) => {
-        criticaltasks.forEach(el => {
-          var members = [];
-          el['assignees'].forEach(assignee => {
-            fetch("/api/members/" + assignee)
-            .then((res) => res.json())
-            .then((member) => { 
-                if(member['email'] == null) {
-                  member['email'] = member['id'];
-                }
-                var combinedtask = {...el, members: [...members, member]};
-                setTasks(tasks => [...tasks, combinedtask]); //FIXME: this resolves in duplicate tasks
-            });
+      criticaltasks.forEach(async el => {
+        var members = [];
+        await Promise.all(el['assignees'].map(assignee => {
+          return fetch("/api/members/" + assignee)
+          .then((res) => res.json())
+          .then((member) => { 
+            if(member['email'] == null) {
+              member['email'] = member['id'];
+            }
+            members.push(member);
           });
+        }));
+        var combinedtask = {...el, members: members};
+        setTasks(tasks => [...tasks, combinedtask]);
       });
     });
   }, []);
@@ -39,12 +40,14 @@ function TaskBlock (props) {
               {task['name']}
             </div>
             <div class="frame-2">
-            {task['members'].map((member) => (
-                <img 
-                  class="ellipse-15"
-                  alt='member picture'
-                  title={member['fullName']}
-                  src={getGravatarURL(member['email'], member['fullName'])} />))}
+            <div class="ellipse-15-group">
+              {task['members'].map((member) => (
+                  <img 
+                    class="ellipse-15"
+                    alt='member picture'
+                    title={member['fullName']}
+                    src={getGravatarURL(member['email'], member['fullName'])} />))}
+            </div>
               <div class="zone-label2">
                 <div class="zone-a2">{task['listname']}</div>
               </div>
