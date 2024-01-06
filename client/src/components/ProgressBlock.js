@@ -1,3 +1,11 @@
+// client/src/components/ProgressBlock.js
+/**
+ * This file handles the ProgressBlock component.
+ * 
+ * @file   This file defines the ProgressBlock component
+ * @author finncyr
+ * @since  2023-11-20
+ */
 import React from 'react';
 
 function ProgressBlock (props) {

@@ -1,3 +1,11 @@
+// client/src/components/TaskBlock.js
+/**
+ * This file handles the TaskBlock component.
+ * 
+ * @file   This file defines the TaskBlock component
+ * @author finncyr
+ * @since  2023-11-20
+ */
 import React from 'react';
 import {sha256} from 'js-sha256';
 

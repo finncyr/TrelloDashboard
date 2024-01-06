@@ -1,3 +1,11 @@
+// client/src/components/SVMiniBlock.js
+/**
+ * This file handles the MiniBlock for the SV Metric component.
+ * 
+ * @file   This file defines the SV Metric component
+ * @author finncyr
+ * @since  2023-11-20
+ */
 import React from 'react';
 
 function SVMiniBlock (props) {

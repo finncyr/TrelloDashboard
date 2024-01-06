@@ -1,3 +1,12 @@
+// client/src/components/ZoneBlock.js
+/**
+ * This file handles the ZoneBlock component.
+ * 
+ * @file   This file defines the ZoneBlock component
+ * @author finncyr
+ * @since  2023-11-20
+ */
+
 import React from 'react';
 import {sha256} from 'js-sha256';
 

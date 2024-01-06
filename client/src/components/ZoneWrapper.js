@@ -1,3 +1,11 @@
+// client/src/components/ZoneWrapper.js
+/**
+ * This file handles the ZoneWrapper component.
+ * 
+ * @file   This file defines the Wrapper-Block around the Zones
+ * @author finncyr
+ * @since  2023-11-20
+ */
 import React, { Component } from 'react';
 import ZoneBlock from './ZoneBlock.js';
 

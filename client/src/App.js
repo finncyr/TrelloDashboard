@@ -1,4 +1,13 @@
 // client/src/App.js
+/**
+ * This file handles the React App.
+ *
+ * Inside this file you can find all App components and the main App function.
+ *
+ * @file   Main file for the React App.
+ * @author finncyr
+ * @since  2023-11-01
+ */
 
 import React from "react";
 import ProgressBlock from "./components/ProgressBlock.js";
@@ -23,14 +32,17 @@ function App() {
   return (
     <>
     <div class="main-dash">
+
       <div class="header-bar">
         <div class="header"></div>
         <div class="trello-dash">TrelloDash</div>
         <div class="project-abcd">{!tr_title ? "No Project found!" : "Project: " + tr_title}</div>
         <URLPostInput />
       </div>
+
       <div class="body-content">
         <ProgressBlock />
+
         <div class="mini-blocks">
           <SPIMiniBlock />
           <SVMiniBlock />
@@ -38,9 +50,7 @@ function App() {
         </div>
 
         <MemberBlock />
-
         <ZoneWrapper />
-
         <TaskBlock />
 
         <div class="footer"><a href="/api-docs">visit the api documentation</a></div>

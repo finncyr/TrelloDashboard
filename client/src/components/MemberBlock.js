@@ -1,3 +1,11 @@
+// client/src/components/MemberBlock.js
+/**
+ * This file handles the MemberBlock component.
+ * 
+ * @file   This file defines the MemberBlock component
+ * @author finncyr
+ * @since  2023-11-20
+ */
 import React from 'react';
 import {sha256} from 'js-sha256';
 

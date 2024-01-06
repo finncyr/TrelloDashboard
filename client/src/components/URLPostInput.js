@@ -1,3 +1,11 @@
+// client/src/components/URLPostInput.js
+/**
+ * This file handles the URLPostInput component.
+ * 
+ * @file   This file defines the Input component for the URL of the Trello Board to be used by the Dashboard. 
+ * @author finncyr
+ * @since  2023-11-20
+ */
 import React, { Component, useState } from 'react';
 
 class URLPostInput extends React.Component {

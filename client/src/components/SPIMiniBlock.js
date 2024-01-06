@@ -1,3 +1,11 @@
+// client/src/components/SPIMiniBlock.js
+/**
+ * This file handles the MiniBlock for the SPI Metric component.
+ * 
+ * @file   This file defines the SPI Metric component
+ * @author finncyr
+ * @since  2023-11-20
+ */
 import React from 'react';
 
 function SPIMiniBlock (props) {
