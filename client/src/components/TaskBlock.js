@@ -14,12 +14,12 @@ function TaskBlock (props) {
           el['assignees'].forEach(assignee => {
             fetch("/api/members/" + assignee)
             .then((res) => res.json())
-            .then((member) => {
+            .then((member) => { 
                 if(member['email'] == null) {
                   member['email'] = member['id'];
                 }
                 var combinedtask = {...el, members: [...members, member]};
-                setTasks(tasks => [...tasks, combinedtask]);
+                setTasks(tasks => [...tasks, combinedtask]); //FIXME: this resolves in duplicate tasks
             });
           });
       });
