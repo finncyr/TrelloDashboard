@@ -775,7 +775,7 @@
   width: 881px;
   height: 170px;
   position: absolute;
-  overflow-y: scroll;
+  overflow-y: auto;
   left: 0px;
   top: 44px;
   display: flex;
