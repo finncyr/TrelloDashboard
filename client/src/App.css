@@ -381,34 +381,31 @@
   left: 30px;
   top: 21px;
 }
-.zones2 {
-  border-radius: 5px;
-  border-style: dashed;
-  border-color: transparent;
-  border-width: 1px;
-  width: 887px;
-  height: 300px;
-  position: relative;
-  top: 46px;
-  overflow: hidden;
+.property-1-a, .zones2 {
+  align-items: center;
   display: flex;
-    flex-direction: row;
-    align-items: center;
-    align-content: center;
-    justify-content: space-evenly;
+  overflow: auto;
+  position: relative;
+  row-gap: 15px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: flex-start;
+}
+.zones2 {
+  height: 300px;
+  top: 46px;
+  width: 882px;
+  left: 2px;
 }
 .property-1-a {
   background: #d9d9d9;
   border-radius: 10px;
-  padding: 10px 21px 15px 21px;
-  display: flex;
   flex-direction: column;
-  gap: 15px;
-  align-items: center;
   justify-content: flex-start;
-  position: relative;
-  overflow: hidden;
   max-width: 260px;
+  overflow: hidden;
+  padding: 10px 21px 15px;
 }
 .zone-a {
   color: #000000;
