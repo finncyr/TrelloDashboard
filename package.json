@@ -2,7 +2,7 @@
   "name": "trellodashboard",
   "version": "1.1.0",
   "description": "A Dashboard for real-time-projects in Trello",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
     "build": "cd client && npm install && npm run build",
@@ -23,5 +23,8 @@
   },
   "devDependencies": {
     "swagger-autogen": "^2.23.7"
+  },
+  "bin": {
+    "trellodashboard": "./server/index.js"
   }
 }

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // server/index.js
 /**
  * This file handles the Express Server and all API Endpoints.

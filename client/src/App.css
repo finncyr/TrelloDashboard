@@ -311,6 +311,7 @@
   height: 240px;
   display: block;
   position: relative;
+  width: 430px;
 }
 
 .tableheader {
