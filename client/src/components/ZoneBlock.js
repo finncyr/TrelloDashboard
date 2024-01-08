@@ -58,8 +58,8 @@ function ZoneBlock (props) {
           <div class="zone-a">{name}</div>
           <div class="progress-bar">
             <div class="rectangle-52" ref={maxRef}></div>
-            <div class="rectangle-62" style={{width: ((maxwidth/allcards) * closedcards)}}>
-              <div class={((maxwidth/allcards) * closedcards) >= 50 ? "_5-9" : "_5-9-empty"}>{closedcards}/{allcards}</div>
+            <div class="rectangle-62" style={{width: allcards ? ((maxwidth/allcards) * closedcards) : 0}}>
+              <div class={((maxwidth/allcards) * closedcards) >= 50 && allcards !== 0 ? "_5-9" : "_5-9-empty"}>{allcards ? closedcards + "/" + allcards : "0/0"}</div>
             </div>
             
           </div>
