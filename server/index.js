@@ -45,13 +45,13 @@ app.use(cache('15 seconds')); //Cache all requests for a maximum of 15 seconds
 
 // ---- ROUTES ----
 
-app.post("/api/setboard", (req, res) => {
+app.post("/api/setboard", (req, res, next) => {
   // #swagger.description = 'Sets the boardid to be used for all other requests'
   /*  #swagger.parameters['body'] = {
             in: 'body',
             description: 'URL or BoardID of the Trello Board to be used',
             schema: {
-                $url: 'https://trello.com/b/W3JXKZYD/test'
+                $url: 'https://trello.com/b/W3JXKZYD/event-aufbau-messestand'
             }
     } */
   let regex = /https:\/\/trello\.com\/b\/[A-Za-z0-9]+\/[A-Za-z0-9]+/i;
@@ -113,6 +113,15 @@ app.get("/api/title", (req, res) => {
 // ---- COUNTS ----
 
 app.get("/api/counts/", async (req, res, next) => {
+  // #swagger.description = 'Returns a object with the amount of all, open and closed tasks on the board'
+  /* #swagger.responses[200] = {
+            description: 'Amount of all, open and closed tasks on the board as object',
+            schema: {
+              alltasks: 10,
+              closedtasks: 4,
+              opentasks: 6
+            }
+    } */
   if (!req.cookies.boardid) {
     res.json({ message: "" });
     return;
@@ -121,6 +130,7 @@ app.get("/api/counts/", async (req, res, next) => {
     trello.getListsOnBoard(req.cookies.boardid),
     trello.getCardsOnBoard(req.cookies.boardid)
   ]).catch((err) => next(err));
+
   const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
   var counts = {
     alltasks: 0,
@@ -154,6 +164,7 @@ app.get("/api/counts/opentasks", async (req, res, next) => {
     trello.getListsOnBoard(req.cookies.boardid),
     trello.getCardsOnBoard(req.cookies.boardid)
   ]).catch((err) => next(err));
+
   const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
   var opentasks = 0;
   cards.forEach(el => {
@@ -178,6 +189,7 @@ app.get("/api/counts/closedtasks", async (req, res, next) => {
     trello.getListsOnBoard(req.cookies.boardid),
     trello.getCardsOnBoard(req.cookies.boardid)
   ]).catch((err) => next(err));
+
   const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
   var closedtasks = 0;
   cards.forEach(el => {
@@ -202,6 +214,7 @@ app.get("/api/counts/alltasks", async (req, res, next) => {
     trello.getListsOnBoard(req.cookies.boardid),
     trello.getCardsOnBoard(req.cookies.boardid)
   ]).catch((err) => next(err));
+
   const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
   var alltasks = 0;
   cards.forEach(el => {
@@ -246,7 +259,7 @@ app.get("/api/cards/:cardid", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-app.get("/api/cards/:cardid/duration", (req, res) => {
+app.get("/api/cards/:cardid/duration", (req, res, next) => {
   // #swagger.description = 'Returns the duration of a specific card on the board in minutes'
   /* #swagger.responses[200] = {
             description: 'Duration of a specific card on the board in minutes',
@@ -272,7 +285,7 @@ app.get("/api/cards/:cardid/duration", (req, res) => {
     .catch((err) => next(err));
 });
 
-app.get("/api/cards/:cardid/due", (req, res) => {
+app.get("/api/cards/:cardid/due", (req, res, next) => {
   // #swagger.description = 'Returns the due time of a specific card on the board in ms since 1970-01-01'
   /* #swagger.responses[200] = {
             description: 'Due time of a specific card on the board in ms since 1970-01-01',
@@ -291,7 +304,7 @@ app.get("/api/cards/:cardid/due", (req, res) => {
 
 
 // Negative Values mean the card is overdue by that amount of milliseconds
-app.get("/api/cards/:cardid/overdue", (req, res) => {
+app.get("/api/cards/:cardid/overdue", (req, res, next) => {
   // #swagger.description = 'Returns the overtime of a specific card on the board in ms. Negative Values mean the card is overdue by that amount of milliseconds. Positive Values mean the card is due in that amount of milliseconds'
   /* #swagger.responses[200] = {
             description: 'Overtime of a specific card on the board in ms',
@@ -591,9 +604,9 @@ app.get("/api/lists/:listid/:value", async (req, res, next) => {
 // ---- BOARD ----
 
 app.get("/api/board/ast", async (req, res, next) => {
-  // #swagger.description = 'Returns the average Schedule Variance per card of the whole board in remaining minutes'
+  // #swagger.description = 'Returns the average Slack Time per card of the whole board in remaining minutes'
   /* #swagger.responses[200] = {
-            description: 'Average Schedule Variance per card of the whole board in rounded remaining minutes',
+            description: 'Average Slack Time per card of the whole board in rounded remaining minutes',
             schema: 16
     } */
   if (!req.cookies.boardid) {
@@ -605,7 +618,7 @@ app.get("/api/board/ast", async (req, res, next) => {
     trello.getListsOnBoard(req.cookies.boardid),
     trello.getCardsOnBoard(req.cookies.boardid)
   ]).catch((err) => next(err));
-  var sv = 0;
+  var st = 0;
   const infolist = alllists.filter(function (el) {
     return el.name == "INFO";
   });
@@ -620,10 +633,10 @@ app.get("/api/board/ast", async (req, res, next) => {
         cardduaration = parseInt(dur_label[0]['name']);
         break;
       }
-      sv += (Date.parse(el['due']) - cardduaration * 60000) - Date.now(); //calculate sv
+      st += (Date.parse(el['due']) - cardduaration * 60000) - Date.now(); //calculate st
     }
   });
-  res.json(Math.round((sv / 60000) / cards.length)); //return sv in minutes
+  res.json(Math.round((st / 60000) / cards.length)); //return average st in minutes
 });
 
 app.get("/api/board/sv", async (req, res, next) => {
@@ -857,7 +870,7 @@ app.get("/api/members/:memberid/:value", (req, res, next) => {
 
 // ---- TIMEVALUES ----
 
-app.get("/api/timecards", (req, res) => {
+app.get("/api/timecards", (req, res, next) => {
   // #swagger.description = 'Returns an array of all timecards on the board'
   /* #swagger.responses[200] = {
             description: 'Array of all cards including "TIMECARD" in their name on the board',
@@ -874,7 +887,7 @@ app.get("/api/timecards", (req, res) => {
         }
       });
       res.json(timecards);
-    });
+    }).catch((err) => next(err));
 });
 
 app.get("/api/timeplanned", async (req, res, next) => {
