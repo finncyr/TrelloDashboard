@@ -1,17 +1,16 @@
 // client/src/components/ZoneBlock.js
 /**
  * This file handles the ZoneBlock component.
- * 
+ *
  * @file   This file defines the ZoneBlock component
  * @author finncyr
  * @since  2023-11-20
  */
 
-import React from 'react';
-import {sha256} from 'js-sha256';
+import React from "react";
+import { sha256 } from "js-sha256";
 
-function ZoneBlock (props) {
-
+function ZoneBlock(props) {
   const [name] = React.useState(props.name || "Unnamed Zone");
   const [id] = React.useState(props.id || 0);
 
@@ -29,19 +28,19 @@ function ZoneBlock (props) {
     fetch("/api/lists/" + id)
       .then((res) => res.json())
       .then((list) => {
-          setAllcards(list['allcards']);
-          setClosedcards(list['closedcards']);
-          setCriticaltask(list['criticaltask']);
-          setCriticalopen(list['criticalopen']);
-          setOvertimed(list['overtimed']);
-          list['listmembers'].forEach(el => {
-            fetch("/api/members/" + el)
+        setAllcards(list["allcards"]);
+        setClosedcards(list["closedcards"]);
+        setCriticaltask(list["criticaltask"]);
+        setCriticalopen(list["criticalopen"]);
+        setOvertimed(list["overtimed"]);
+        list["listmembers"].forEach((el) => {
+          fetch("/api/members/" + el)
             .then((res) => res.json())
             .then((member) => {
-              if(member['email'] == null) {
-                member['email'] = member['id'];
+              if (member["email"] == null) {
+                member["email"] = member["id"];
               }
-              setMembers(members => [...members, member]);
+              setMembers((members) => [...members, member]);
             });
         });
       });
@@ -51,57 +50,75 @@ function ZoneBlock (props) {
     setMaxwidth(maxRef.current.offsetWidth);
   }, []);
 
-      
-    return(
-        <>
-        <div class="property-1-a">
-          <div class="zone-a">{name}</div>
-          <div class="progress-bar">
-            <div class="rectangle-52" ref={maxRef}></div>
-            <div class="rectangle-62" style={{width: allcards ? ((maxwidth/allcards) * closedcards) : 0}}>
-              <div class={((maxwidth/allcards) * closedcards) >= 50 && allcards !== 0 ? "_5-9" : "_5-9-empty"}>{allcards ? closedcards + "/" + allcards : "0/0"}</div>
+  return (
+    <>
+      <div class="property-1-a">
+        <div class="zone-a">{name}</div>
+        <div class="progress-bar">
+          <div class="rectangle-52" ref={maxRef}></div>
+          <div
+            class="rectangle-62"
+            style={{
+              width: allcards ? (maxwidth / allcards) * closedcards : 0,
+            }}
+          >
+            <div
+              class={
+                (maxwidth / allcards) * closedcards >= 50 && allcards !== 0
+                  ? "_5-9"
+                  : "_5-9-empty"
+              }
+            >
+              {allcards ? closedcards + "/" + allcards : "0/0"}
             </div>
-            
-          </div>
-          <div class="people">
-          {members.map((member) => (
-              <img 
-                class="ellipse-1"
-                alt='member'
-                title={member['fullName']}
-                src={getGravatarURL(member['email'], member['fullName'])} />))}
-          </div>
-          
-          <div class="critical-task">
-            {criticalTaskBlock(criticaltask, criticalopen)}
-          </div>
-
-          <div class="on-time">
-            {overtimeBlock(overtimed)}
           </div>
         </div>
-        </>
-    )
+        <div class="people">
+          {members.map((member) => (
+            <img
+              class="ellipse-1"
+              alt="member"
+              title={member["fullName"]}
+              src={getGravatarURL(member["email"], member["fullName"])}
+            />
+          ))}
+        </div>
+
+        <div class="critical-task">
+          {criticalTaskBlock(criticaltask, criticalopen)}
+        </div>
+
+        <div class="on-time">{overtimeBlock(overtimed)}</div>
+      </div>
+    </>
+  );
 }
 
-function criticalTaskBlock(criticaltask, criticalopen){
-  if(criticaltask > 0 && criticalopen > 0){
-    return(
+function criticalTaskBlock(criticaltask, criticalopen) {
+  if (criticaltask > 0 && criticalopen > 0) {
+    return (
       <>
         <div class="rectangle-11"></div>
-        <div class="_1-critical-task-open">{criticalopen} Critical Task open</div>
+        <div class="_1-critical-task-open">
+          {criticalopen} Critical Task open
+        </div>
         <svg
-          class="vector4" width="21" height="19" viewBox="0 0 21 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          class="vector4"
+          width="21"
+          height="19"
+          viewBox="0 0 21 19"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M20.2749 15.8933C20.9158 17.0042 20.1113 18.3928 18.8313 18.3928H2.16855C0.886017 18.3928 0.0852531 17.002 0.724906 15.8933L9.05636 1.44786C9.69758 0.33644 11.3036 0.338454 11.9437 1.44786L20.2749 15.8933ZM10.5 12.9067C9.61789 12.9067 8.90279 13.6218 8.90279 14.5039C8.90279 15.3861 9.61789 16.1012 10.5 16.1012C11.3821 16.1012 12.0972 15.3861 12.0972 14.5039C12.0972 13.6218 11.3821 12.9067 10.5 12.9067ZM8.98358 7.16553L9.24115 11.8878C9.2532 12.1087 9.43591 12.2817 9.65719 12.2817H11.3428C11.5641 12.2817 11.7468 12.1087 11.7589 11.8878L12.0164 7.16553C12.0295 6.92685 11.8394 6.72616 11.6004 6.72616H9.39959C9.16056 6.72616 8.97056 6.92685 8.98358 7.16553Z"
             fill="white"
           />
         </svg>
       </>
-    )
-  }
-  else if(criticaltask > 0 && criticalopen === 0){
-    return(
+    );
+  } else if (criticaltask > 0 && criticalopen === 0) {
+    return (
       <>
         <div class="rectangle-113"></div>
         <div class="critical-tasks-done">Critical Tasks done</div>
@@ -119,10 +136,10 @@ function criticalTaskBlock(criticaltask, criticalopen){
           />
         </svg>
       </>
-    )}
-    else{
-      return(
-        <>
+    );
+  } else {
+    return (
+      <>
         <div class="rectangle-113-2"></div>
         <div class="critical-tasks-done">No Critical Tasks</div>
         <svg
@@ -139,13 +156,13 @@ function criticalTaskBlock(criticaltask, criticalopen){
           />
         </svg>
       </>
-      )
-    }
+    );
+  }
 }
 
 function overtimeBlock(overtimed) {
-  if(overtimed === 0){
-    return(
+  if (overtimed === 0) {
+    return (
       <>
         <div class="rectangle-112"></div>
         <div class="tasks-on-time">Tasks on time</div>
@@ -163,13 +180,16 @@ function overtimeBlock(overtimed) {
           />
         </svg>
       </>
-    )
-  }
-  else{
-    return(
+    );
+  } else {
+    return (
       <>
         <div class="rectangle-114"></div>
-        <div class="task-behind-schedule">{overtimed > 1 ? overtimed + " Tasks behind schedule" : overtimed + " Task behind schedule"}</div>
+        <div class="task-behind-schedule">
+          {overtimed > 1
+            ? overtimed + " Tasks behind schedule"
+            : overtimed + " Task behind schedule"}
+        </div>
         <svg
           class="vector9"
           width="21"
@@ -183,16 +203,16 @@ function overtimeBlock(overtimed) {
             fill="white"
           />
         </svg>
-        </>
-    )
+      </>
+    );
   }
 }
 
-function getGravatarURL( email, fullName ) {
-  const address = String( email ).trim().toLowerCase();
-  const hash = sha256( address );
-  const namesplit = String( fullName ).split();
-  return `https://www.gravatar.com/avatar/${ hash }?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/${namesplit[0]}}/80/random`;
+function getGravatarURL(email, fullName) {
+  const address = String(email).trim().toLowerCase();
+  const hash = sha256(address);
+  const namesplit = String(fullName).split();
+  return `https://www.gravatar.com/avatar/${hash}?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/${namesplit[0]}}/80/random`;
 }
 
 export default ZoneBlock;

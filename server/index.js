@@ -3,7 +3,7 @@
 /**
  * This file handles the Express Server and all API Endpoints.
  *
- * Inside this file you can find all API Endpoints and their documentation. 
+ * Inside this file you can find all API Endpoints and their documentation.
  * The documentation is written in the Swagger 2.0 Specification.
  *
  * @file   Root-File of the Server.
@@ -13,35 +13,38 @@
 
 // Includes
 const express = require("express");
-const path = require('path');
+const path = require("path");
 const Trello = require("trello");
-const dotenv = require('dotenv');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../swagger-output.json');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
-const apicache = require('apicache');
+const dotenv = require("dotenv");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("../swagger-output.json");
+const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
+const apicache = require("apicache");
 
 // Configuartions
 dotenv.config();
 const PORT = process.env.PORT || 3001;
-var trello = new Trello(process.env.POWER_UP_API_KEY, process.env.POWER_UP_TOKEN);
+var trello = new Trello(
+  process.env.POWER_UP_API_KEY,
+  process.env.POWER_UP_TOKEN
+);
 const app = express();
 let cache = apicache.middleware;
 
 // ------------------------
 
 // Have Node serve the files for our built React app
-app.use(express.static(path.resolve(__dirname, '../client/build')));
+app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 // Serve Swagger-API-Docs
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Middlewares
 app.use(express.json()); //JSON Parser for POST/PUT Requests
 app.use(cookieParser()); //Cookie Parser for BoardID
-app.use(morgan('dev')); //Morgan for Logging
-app.use(cache('15 seconds')); //Cache all requests for a maximum of 15 seconds
+app.use(morgan("dev")); //Morgan for Logging
+app.use(cache("15 seconds")); //Cache all requests for a maximum of 15 seconds
 
 // ---- ROUTES ----
 
@@ -55,15 +58,18 @@ app.post("/api/setboard", (req, res, next) => {
             }
     } */
   let regex = /https:\/\/trello\.com\/b\/[A-Za-z0-9]+\/[A-Za-z0-9]+/i;
-  if (req.body['url'] != null && req.body['url'] != "" && regex.test(req.body['url'])) {
-    var urljson = req.body['url'] + ".json";
+  if (
+    req.body["url"] != null &&
+    req.body["url"] != "" &&
+    regex.test(req.body["url"])
+  ) {
+    var urljson = req.body["url"] + ".json";
     fetch(urljson)
       .then((trellores) => {
         console.log("Trello answered with: " + trellores.status);
         if (trellores.status == 200) {
           return trellores.json();
-        }
-        else {
+        } else {
           return null;
         }
       })
@@ -72,20 +78,20 @@ app.post("/api/setboard", (req, res, next) => {
           res.status(404).send("Error: Board not found on Trello!");
           console.log("Board not found on Trello!");
           // #swagger.responses[404] = { description: 'Board not found on Trello' }
-        }
-        else if (board['id'] != null && board['id'] != "") {
-          boardid = board['id'];
-          res.cookie("boardid", board['id'], { maxAge: 7200000 }).cookie("name", board['name'], { maxAge: 7200000 }).send("Board ID changed to: " + board['id']);
-          console.log("Session changed to: " + board['id']);
+        } else if (board["id"] != null && board["id"] != "") {
+          boardid = board["id"];
+          res
+            .cookie("boardid", board["id"], { maxAge: 7200000 })
+            .cookie("name", board["name"], { maxAge: 7200000 })
+            .send("Board ID changed to: " + board["id"]);
+          console.log("Session changed to: " + board["id"]);
         }
       });
-  }
-  else if (!regex.test(req.body['url'])) {
+  } else if (!regex.test(req.body["url"])) {
     res.status(400).send("Error: Invalid URL!");
     console.log("Invalid URL!");
     // #swagger.responses[400] = { description: 'No matching URL provided' }
-  }
-  else {
+  } else {
     res.status(500).send("Case not handled!");
     console.log("Case not handled!");
     // #swagger.responses[500] = { description: 'Internal Server Error' }
@@ -104,8 +110,7 @@ app.get("/api/title", (req, res) => {
   */
   if (req.cookies.name == null) {
     res.json({ message: "" });
-  }
-  else {
+  } else {
     res.json({ message: req.cookies.name });
   }
 });
@@ -128,20 +133,22 @@ app.get("/api/counts/", async (req, res, next) => {
   }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
 
-  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
+  const infolistid = alllists.filter((el) => el.name == "INFO")[0]["id"]; //get id of done list
   var counts = {
     alltasks: 0,
     closedtasks: 0,
-    opentasks: 0
+    opentasks: 0,
   };
 
-  cards.forEach(el => {
-    if ((el['idList'] != infolistid && el['due'] != null)) { //ignore cards in info list
+  cards.forEach((el) => {
+    if (el["idList"] != infolistid && el["due"] != null) {
+      //ignore cards in info list
       counts.alltasks++;
-      if (el['dueComplete']) { //ignore cards in info list & done cards
+      if (el["dueComplete"]) {
+        //ignore cards in info list & done cards
         counts.closedtasks++;
       }
     }
@@ -162,13 +169,14 @@ app.get("/api/counts/opentasks", async (req, res, next) => {
   }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
 
-  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
+  const infolistid = alllists.filter((el) => el.name == "INFO")[0]["id"]; //get id of done list
   var opentasks = 0;
-  cards.forEach(el => {
-    if ((el['idList'] != infolistid) && !el['dueComplete'] && el['due'] != null) { //ignore cards in info list & done cards
+  cards.forEach((el) => {
+    if (el["idList"] != infolistid && !el["dueComplete"] && el["due"] != null) {
+      //ignore cards in info list & done cards
       opentasks++;
     }
   });
@@ -187,13 +195,14 @@ app.get("/api/counts/closedtasks", async (req, res, next) => {
   }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
 
-  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
+  const infolistid = alllists.filter((el) => el.name == "INFO")[0]["id"]; //get id of done list
   var closedtasks = 0;
-  cards.forEach(el => {
-    if ((el['idList'] != infolistid) && el['dueComplete'] && el['due'] != null) { //ignore cards in info list & done cards
+  cards.forEach((el) => {
+    if (el["idList"] != infolistid && el["dueComplete"] && el["due"] != null) {
+      //ignore cards in info list & done cards
       closedtasks++;
     }
   });
@@ -212,13 +221,14 @@ app.get("/api/counts/alltasks", async (req, res, next) => {
   }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
 
-  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
+  const infolistid = alllists.filter((el) => el.name == "INFO")[0]["id"]; //get id of done list
   var alltasks = 0;
-  cards.forEach(el => {
-    if ((el['idList'] != infolistid)) { //ignore cards in info list
+  cards.forEach((el) => {
+    if (el["idList"] != infolistid) {
+      //ignore cards in info list
       alltasks++;
     }
   });
@@ -239,7 +249,8 @@ app.get("/api/cards", (req, res, next) => {
     res.json({ message: "" });
     return;
   }
-  trello.getCardsOnBoard(req.cookies.boardid)
+  trello
+    .getCardsOnBoard(req.cookies.boardid)
     .then((cards) => res.json(cards))
     .catch((err) => next(err));
 });
@@ -254,7 +265,8 @@ app.get("/api/cards/:cardid", (req, res, next) => {
     res.json({ message: "" });
     return;
   }
-  trello.getCard(req.cookies.boardid, req.params.cardid)
+  trello
+    .getCard(req.cookies.boardid, req.params.cardid)
     .then((card) => res.json(card))
     .catch((err) => next(err));
 });
@@ -269,15 +281,17 @@ app.get("/api/cards/:cardid/duration", (req, res, next) => {
     res.json({ message: "Board ID not set." });
     return;
   }
-  trello.getLabelsForBoard(req.cookies.boardid)
+  trello
+    .getLabelsForBoard(req.cookies.boardid)
     .then((durations) => {
-      trello.getCard(req.cookies.boardid, req.params.cardid)
+      trello
+        .getCard(req.cookies.boardid, req.params.cardid)
         .then((card) => {
-          for (var label of card['labels']) {
+          for (var label of card["labels"]) {
             const dur_label = durations.filter(function (duration) {
-              return duration['id'] == label['id'];
+              return duration["id"] == label["id"];
             });
-            res.json(parseInt(dur_label[0]['name']));
+            res.json(parseInt(dur_label[0]["name"]));
           }
         })
         .catch((err) => next(err));
@@ -295,13 +309,13 @@ app.get("/api/cards/:cardid/due", (req, res, next) => {
     res.json({ message: "Board ID not set." });
     return;
   }
-  trello.getCard(req.cookies.boardid, req.params.cardid)
+  trello
+    .getCard(req.cookies.boardid, req.params.cardid)
     .then((card) => {
-      res.json(Date.parse(card['due']));
+      res.json(Date.parse(card["due"]));
     })
     .catch((err) => next(err));
 });
-
 
 // Negative Values mean the card is overdue by that amount of milliseconds
 app.get("/api/cards/:cardid/overdue", (req, res, next) => {
@@ -314,9 +328,10 @@ app.get("/api/cards/:cardid/overdue", (req, res, next) => {
     res.json({ message: "Board ID not set." });
     return;
   }
-  trello.getCard(req.cookies.boardid, req.params.cardid)
+  trello
+    .getCard(req.cookies.boardid, req.params.cardid)
     .then((card) => {
-      res.json((Date.parse(card['due']) - Date.now()));
+      res.json(Date.parse(card["due"]) - Date.now());
     })
     .catch((err) => next(err));
 });
@@ -327,7 +342,8 @@ app.get("/api/cards/:cardid/:value", (req, res, next) => {
     res.json({ message: "Board ID not set." });
     return;
   }
-  trello.getCard(req.cookies.boardid, req.params.cardid)
+  trello
+    .getCard(req.cookies.boardid, req.params.cardid)
     .then((card) => res.json(card[req.params.value]))
     .catch((err) => next(err));
 });
@@ -348,26 +364,26 @@ app.get("/api/criticaltasks", async (req, res, next) => {
   }
   const [alllists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
   var criticaltasks = [];
 
-  cards.forEach(el => {
-    el['labels'].forEach(label => {
-      if (label['name'] == "CRITICAL") {
+  cards.forEach((el) => {
+    el["labels"].forEach((label) => {
+      if (label["name"] == "CRITICAL") {
         var listname = "";
         alllists.filter(function (list) {
-          if (list['id'] == el['idList']) {
-            listname = list['name'];
+          if (list["id"] == el["idList"]) {
+            listname = list["name"];
           }
         });
         criticaltasks.push({
-          id: el['id'],
-          name: el['name'],
+          id: el["id"],
+          name: el["name"],
           listname: listname,
-          due: el['due'],
-          dueComplete: el['dueComplete'],
-          assignees: el['idMembers']
+          due: el["due"],
+          dueComplete: el["dueComplete"],
+          assignees: el["idMembers"],
         });
       }
     });
@@ -389,7 +405,8 @@ app.get("/api/lists", (req, res, next) => {
     res.json({ message: "Board ID not set." });
     return;
   }
-  trello.getListsOnBoard(req.cookies.boardid)
+  trello
+    .getListsOnBoard(req.cookies.boardid)
     .then((lists) => {
       res.json(lists);
     })
@@ -415,27 +432,27 @@ app.get("/api/lists/:listid", async (req, res, next) => {
   var overtimed = 0;
   const [lists, cards] = await Promise.all([
     trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnList(req.params.listid)
+    trello.getCardsOnList(req.params.listid),
   ]).catch((err) => next(err));
 
   countall = cards.length;
   const list = lists.filter(function (el) {
-    return el['id'] == req.params.listid;
+    return el["id"] == req.params.listid;
   });
-  listname = list[0]['name'];
+  listname = list[0]["name"];
   var members = [];
-  cards.forEach(el => {
-    if (el['dueComplete']) {
+  cards.forEach((el) => {
+    if (el["dueComplete"]) {
       countclosed++;
     }
-    if (Date.parse(el['due']) - Date.now() < 0 && !el['dueComplete']) {
+    if (Date.parse(el["due"]) - Date.now() < 0 && !el["dueComplete"]) {
       overtimed++;
     }
-    members = members.concat(el['idMembers']);
-    el['labels'].forEach(label => {
-      if (label['name'] == "CRITICAL") {
+    members = members.concat(el["idMembers"]);
+    el["labels"].forEach((label) => {
+      if (label["name"] == "CRITICAL") {
         criticaltask++;
-        if (!el['dueComplete']) {
+        if (!el["dueComplete"]) {
           criticalopen++;
         }
       }
@@ -451,7 +468,7 @@ app.get("/api/lists/:listid", async (req, res, next) => {
     listmembers: listmembers,
     criticaltask: criticaltask,
     criticalopen: criticalopen,
-    overtimed: overtimed
+    overtimed: overtimed,
   });
 });
 
@@ -465,9 +482,10 @@ app.get("/api/lists/:listid/name", (req, res, next) => {
     res.json("");
     return;
   }
-  trello.getListsOnBoard(req.cookies.boardid)
+  trello
+    .getListsOnBoard(req.cookies.boardid)
     .then((lists) => {
-      res.json(lists.filter(el => el['id'] == req.params.listid)[0]['name']);
+      res.json(lists.filter((el) => el["id"] == req.params.listid)[0]["name"]);
     })
     .catch((err) => next(err));
 });
@@ -478,7 +496,8 @@ app.get("/api/lists/:listid/countall", (req, res, next) => {
             description: 'Amount of all cards on a specific list on the board as integer',
             schema: 8
     } */
-  trello.getCardsOnList(req.params.listid)
+  trello
+    .getCardsOnList(req.params.listid)
     .then((cards) => {
       res.json(cards.length);
     })
@@ -491,11 +510,12 @@ app.get("/api/lists/:listid/countclosed", (req, res, next) => {
             description: 'Amount of all closed cards on a specific list on the board as integer',
             schema: 4
     } */
-  trello.getCardsOnList(req.params.listid)
+  trello
+    .getCardsOnList(req.params.listid)
     .then((cards) => {
       var closed = 0;
-      cards.forEach(el => {
-        if (el['dueComplete']) {
+      cards.forEach((el) => {
+        if (el["dueComplete"]) {
           closed++;
         }
       });
@@ -506,11 +526,12 @@ app.get("/api/lists/:listid/countclosed", (req, res, next) => {
 
 app.get("/api/lists/:listid/members", (req, res, next) => {
   // #swagger.description = 'Returns an array of all member id's on a specific list on the board'
-  trello.getCardsOnList(req.params.listid)
+  trello
+    .getCardsOnList(req.params.listid)
     .then((cards) => {
       var members = [];
-      cards.forEach(el => {
-        members = members.concat(el['idMembers']);
+      cards.forEach((el) => {
+        members = members.concat(el["idMembers"]);
       });
       res.json([...new Set(members)]);
     })
@@ -525,11 +546,12 @@ app.get("/api/lists/:listid/overtimed", (req, res, next) => {
               { $ref: '#/definitions/Card' }
             ]
     } */
-  trello.getCardsOnList(req.params.listid)
+  trello
+    .getCardsOnList(req.params.listid)
     .then((cards) => {
       var overtimed = [];
-      cards.forEach(el => {
-        if (Date.parse(el['due']) < Date.now()) {
+      cards.forEach((el) => {
+        if (Date.parse(el["due"]) < Date.now()) {
           overtimed.push(el);
         }
       });
@@ -544,11 +566,12 @@ app.get("/api/lists/:listid/anyovertimed", (req, res, next) => {
             description: 'True if any card on a specific list on the board is overtimed',
             schema: true
     } */
-  trello.getCardsOnList(req.params.listid)
+  trello
+    .getCardsOnList(req.params.listid)
     .then((cards) => {
       var overtimed = false;
-      cards.forEach(el => {
-        if (Date.parse(el['due']) < Date.now()) {
+      cards.forEach((el) => {
+        if (Date.parse(el["due"]) < Date.now()) {
           overtimed = true;
         }
       });
@@ -569,20 +592,20 @@ app.get("/api/lists/:listid/sv", async (req, res, next) => {
   }
   const [durations, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid),
-    trello.getCardsOnList(req.params.listid)
+    trello.getCardsOnList(req.params.listid),
   ]).catch((err) => next(err));
   var sv = 0;
 
-  cards.forEach(el => {
+  cards.forEach((el) => {
     var cardduaration = 0;
-    for (var label of el['labels']) {
+    for (var label of el["labels"]) {
       const dur_label = durations.filter(function (duration) {
-        return duration['id'] == label['id'];
+        return duration["id"] == label["id"];
       });
-      cardduaration = parseInt(dur_label[0]['name']);
+      cardduaration = parseInt(dur_label[0]["name"]);
       break;
     }
-    sv += (Date.parse(el['due']) - cardduaration * 60000) - Date.now();
+    sv += Date.parse(el["due"]) - cardduaration * 60000 - Date.now();
   });
   res.json(Math.round(sv / 60000));
 });
@@ -593,9 +616,10 @@ app.get("/api/lists/:listid/:value", async (req, res, next) => {
     res.json("");
     return;
   }
-  trello.getListsOnBoard(req.cookies.boardid)
+  trello
+    .getListsOnBoard(req.cookies.boardid)
     .then((lists) => {
-      const list = (lists.filter((el) => el.id == req.params.listid))[0]; //get requested list
+      const list = lists.filter((el) => el.id == req.params.listid)[0]; //get requested list
       res.json(list[req.params.value]);
     })
     .catch((err) => next(err));
@@ -616,41 +640,48 @@ app.get("/api/board/sv", async (req, res, next) => {
   const [durations, alllists, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid),
     trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
 
   var EV = 0;
   var PV = 0;
 
-  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of info list
+  const infolistid = alllists.filter((el) => el.name == "INFO")[0]["id"]; //get id of info list
 
-  cards.forEach(card => {
-    if ((card['due']) != null &&                                 //if card has a due date
-      !card['name'].includes("TIMECARD") &&                        //and not a timecard
-      card['idList'] != infolistid) {                              //and not in info list
+  cards.forEach((card) => {
+    if (
+      card["due"] != null && //if card has a due date
+      !card["name"].includes("TIMECARD") && //and not a timecard
+      card["idList"] != infolistid
+    ) {
+      //and not in info list
       var cardduaration = 0;
-      for (var label of card['labels']) {
-        const dur_label = durations.filter(function (duration) { //get duration of card by label
-          return duration['id'] == label['id'];
+      for (var label of card["labels"]) {
+        const dur_label = durations.filter(function (duration) {
+          //get duration of card by label
+          return duration["id"] == label["id"];
         });
-        cardduaration = parseInt(dur_label[0]['name']);
+        cardduaration = parseInt(dur_label[0]["name"]);
         break;
       }
-      if (Date.parse(card['due']) - Date.now() <= 0) {          //if card is due or overdue
-        PV += cardduaration;                                     //it was planned to be done by now
-        if (card['dueComplete']) {                               //if this card is also marked as done
-          EV += cardduaration;                                   //the timing was matched, so Earned Value = Planned Value
+      if (Date.parse(card["due"]) - Date.now() <= 0) {
+        //if card is due or overdue
+        PV += cardduaration; //it was planned to be done by now
+        if (card["dueComplete"]) {
+          //if this card is also marked as done
+          EV += cardduaration; //the timing was matched, so Earned Value = Planned Value
         }
-      }
-      else if (Date.parse(card['due']) - Date.now() > 0 &&        //if the card is not due yet
-        card['dueComplete']) {                                      //but already completed   
-        EV += cardduaration;                                   //the tasks are in advance, so Earned Value > Planned Value
+      } else if (
+        Date.parse(card["due"]) - Date.now() > 0 && //if the card is not due yet
+        card["dueComplete"]
+      ) {
+        //but already completed
+        EV += cardduaration; //the tasks are in advance, so Earned Value > Planned Value
       }
     }
   });
   res.json(EV - PV); //return sv in minutes
 });
-
 
 app.get("/api/board/ru", async (req, res, next) => {
   // #swagger.description = 'Returns the summed Resource Utilization of the whole board in decimal notation'
@@ -666,29 +697,30 @@ app.get("/api/board/ru", async (req, res, next) => {
     trello.getLabelsForBoard(req.cookies.boardid),
     trello.getListsOnBoard(req.cookies.boardid),
     trello.getBoardMembers(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
   var ru = 0;
   const infolist = alllists.filter(function (el) {
     return el.name == "INFO";
   });
-  const infolistid = infolist[0]['id']; //get id of info list
+  const infolistid = infolist[0]["id"]; //get id of info list
   var timeplanned = 0;
   var timeavailable = 0;
-  cards.forEach(el => {
-    if (el['idList'] != infolistid && el['due'] != null) { //ignore cards in info list
-      for (var label of el['labels']) {
-        const dur_label = durations.filter(function (duration) { //get duration of card by label
-          return duration['id'] == label['id'];
+  cards.forEach((el) => {
+    if (el["idList"] != infolistid && el["due"] != null) {
+      //ignore cards in info list
+      for (var label of el["labels"]) {
+        const dur_label = durations.filter(function (duration) {
+          //get duration of card by label
+          return duration["id"] == label["id"];
         });
-        timeplanned += parseInt(dur_label[0]['name']) * el['idMembers'].length;
+        timeplanned += parseInt(dur_label[0]["name"]) * el["idMembers"].length;
         break;
       }
-    }
-    else if (el['name'].includes("TIMECARD")) {
-      members.forEach(member => {
-        if (el['idMembers'].includes(member['id'])) {
-          timeavailable += parseInt(el['desc']);
+    } else if (el["name"].includes("TIMECARD")) {
+      members.forEach((member) => {
+        if (el["idMembers"].includes(member["id"])) {
+          timeavailable += parseInt(el["desc"]);
         }
       });
     }
@@ -709,35 +741,43 @@ app.get("/api/board/spi", async (req, res, next) => {
   const [durations, alllists, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid),
     trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
 
   var EV = 0;
   var PV = 0;
 
-  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of info list
+  const infolistid = alllists.filter((el) => el.name == "INFO")[0]["id"]; //get id of info list
 
-  cards.forEach(card => {
-    if ((card['due']) != null &&                                 //if card has a due date
-      !card['name'].includes("TIMECARD") &&                        //and not a timecard
-      card['idList'] != infolistid) {                              //and not in info list
+  cards.forEach((card) => {
+    if (
+      card["due"] != null && //if card has a due date
+      !card["name"].includes("TIMECARD") && //and not a timecard
+      card["idList"] != infolistid
+    ) {
+      //and not in info list
       var cardduaration = 0;
-      for (var label of card['labels']) {
-        const dur_label = durations.filter(function (duration) { //get duration of card by label
-          return duration['id'] == label['id'];
+      for (var label of card["labels"]) {
+        const dur_label = durations.filter(function (duration) {
+          //get duration of card by label
+          return duration["id"] == label["id"];
         });
-        cardduaration = parseInt(dur_label[0]['name']);
+        cardduaration = parseInt(dur_label[0]["name"]);
         break;
       }
-      if (Date.parse(card['due']) - Date.now() <= 0) {          //if card is due or overdue
-        PV += cardduaration;                                     //it was planned to be done by now
-        if (card['dueComplete']) {                               //if this card is also marked as done
-          EV += cardduaration;                                   //the timing was matched, so Earned Value = Planned Value
+      if (Date.parse(card["due"]) - Date.now() <= 0) {
+        //if card is due or overdue
+        PV += cardduaration; //it was planned to be done by now
+        if (card["dueComplete"]) {
+          //if this card is also marked as done
+          EV += cardduaration; //the timing was matched, so Earned Value = Planned Value
         }
-      }
-      else if (Date.parse(card['due']) - Date.now() > 0 &&        //if the card is not due yet
-        card['dueComplete']) {                                      //but already completed   
-        EV += cardduaration;                                   //the tasks are in advance, so Earned Value > Planned Value
+      } else if (
+        Date.parse(card["due"]) - Date.now() > 0 && //if the card is not due yet
+        card["dueComplete"]
+      ) {
+        //but already completed
+        EV += cardduaration; //the tasks are in advance, so Earned Value > Planned Value
       }
     }
   });
@@ -762,31 +802,45 @@ app.get("/api/members", async (req, res, next) => {
     trello.getLabelsForBoard(req.cookies.boardid),
     trello.getListsOnBoard(req.cookies.boardid),
     trello.getBoardMembers(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
 
-  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id'];
+  const infolistid = alllists.filter((el) => el.name == "INFO")[0]["id"];
   var timemembers = [];
 
-  members.forEach(el => {
+  members.forEach((el) => {
     var availabletime = 0;
     var usedtime = 0;
-    cards.forEach(card => {
-      if (card['idMembers'].includes(el['id']) && card['name'].includes("TIMECARD")) {
-        availabletime += parseInt(card['desc']);
+    cards.forEach((card) => {
+      if (
+        card["idMembers"].includes(el["id"]) &&
+        card["name"].includes("TIMECARD")
+      ) {
+        availabletime += parseInt(card["desc"]);
       }
-      if (card['idList'] != infolistid && !card['name'].includes("TIMECARD")) { //ignore cards in info list and timecards
-        for (var label of card['labels']) {
-          const dur_label = durations.filter((duration) => duration['id'] == label['id']); //get duration of card by label
-          const cardmembers = members.filter((member) => card['idMembers'].find((f) => f == member['id'])); //get members of card by id
-          if (cardmembers.find(member => member['id'] == el['id'])) {
-            usedtime += parseInt(dur_label[0]['name']);
+      if (card["idList"] != infolistid && !card["name"].includes("TIMECARD")) {
+        //ignore cards in info list and timecards
+        for (var label of card["labels"]) {
+          const dur_label = durations.filter(
+            (duration) => duration["id"] == label["id"]
+          ); //get duration of card by label
+          const cardmembers = members.filter((member) =>
+            card["idMembers"].find((f) => f == member["id"])
+          ); //get members of card by id
+          if (cardmembers.find((member) => member["id"] == el["id"])) {
+            usedtime += parseInt(dur_label[0]["name"]);
           }
           break;
         }
       }
     });
-    timemembers.push({ id: el['id'], fullName: el['fullName'], username: el['username'], availabletime: availabletime, usedtime: usedtime });
+    timemembers.push({
+      id: el["id"],
+      fullName: el["fullName"],
+      username: el["username"],
+      availabletime: availabletime,
+      usedtime: usedtime,
+    });
   });
   res.json(timemembers);
 });
@@ -797,7 +851,8 @@ app.get("/api/members/:memberid", (req, res, next) => {
             description: 'Detailed specific member on the board',
             schema: { $ref: '#/definitions/Member' }
     } */
-  trello.getMember(req.params.memberid)
+  trello
+    .getMember(req.params.memberid)
     .then((member) => {
       res.json(member);
     })
@@ -810,12 +865,13 @@ app.get("/api/members/:memberid/availabletime", (req, res, next) => {
             description: 'Available time of a specific member on the board in minutes',
             schema: 120
     } */
-  trello.getMemberCards(req.params.memberid)
+  trello
+    .getMemberCards(req.params.memberid)
     .then((cards) => {
       var availabletime = 0;
-      cards.forEach(el => {
-        if (el['name'].includes("TIMECARD")) {
-          availabletime += parseInt(el['desc']);
+      cards.forEach((el) => {
+        if (el["name"].includes("TIMECARD")) {
+          availabletime += parseInt(el["desc"]);
         }
       });
       res.json(availabletime);
@@ -825,7 +881,8 @@ app.get("/api/members/:memberid/availabletime", (req, res, next) => {
 
 app.get("/api/members/:memberid/:value", (req, res, next) => {
   // #swagger.description = 'Returns a value of a specific member on the board'
-  trello.getMember(req.params.memberid)
+  trello
+    .getMember(req.params.memberid)
     .then((member) => {
       res.json(member[req.params.value]);
     })
@@ -842,16 +899,18 @@ app.get("/api/timecards", (req, res, next) => {
               { $ref: '#/definitions/Card' }
             ]
     } */
-  trello.getCardsOnBoard(req.cookies.boardid)
+  trello
+    .getCardsOnBoard(req.cookies.boardid)
     .then((cards) => {
       var timecards = [];
-      cards.forEach(el => {
-        if (el['name'].includes("TIMECARD")) {
+      cards.forEach((el) => {
+        if (el["name"].includes("TIMECARD")) {
           timecards.push(el);
         }
       });
       res.json(timecards);
-    }).catch((err) => next(err));
+    })
+    .catch((err) => next(err));
 });
 
 app.get("/api/timeplanned", async (req, res, next) => {
@@ -867,19 +926,26 @@ app.get("/api/timeplanned", async (req, res, next) => {
   const [durations, alllists, cards] = await Promise.all([
     trello.getLabelsForBoard(req.cookies.boardid),
     trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
+    trello.getCardsOnBoard(req.cookies.boardid),
   ]).catch((err) => next(err));
   var plannedtime = 0;
-  const infolistid = (alllists.filter((el) => el.name == "INFO"))[0]['id']; //get id of done list
+  const infolistid = alllists.filter((el) => el.name == "INFO")[0]["id"]; //get id of done list
 
-  cards.forEach(el => {
-    if (el['idList'] != infolistid && !el['name'].includes("TIMECARD") && !el['dueComplete'] && el['due'] != null) { //ignore cards in info list and done cards
+  cards.forEach((el) => {
+    if (
+      el["idList"] != infolistid &&
+      !el["name"].includes("TIMECARD") &&
+      !el["dueComplete"] &&
+      el["due"] != null
+    ) {
+      //ignore cards in info list and done cards
       var cardduaration = 0;
-      for (var label of el['labels']) {
-        const dur_label = durations.filter(function (duration) { //get duration of card by label
-          return duration['id'] == label['id'];
+      for (var label of el["labels"]) {
+        const dur_label = durations.filter(function (duration) {
+          //get duration of card by label
+          return duration["id"] == label["id"];
         });
-        cardduaration = parseInt(dur_label[0]['name']);
+        cardduaration = parseInt(dur_label[0]["name"]);
         break;
       }
       plannedtime += cardduaration;
@@ -891,8 +957,8 @@ app.get("/api/timeplanned", async (req, res, next) => {
 // --------------------
 
 // All other GET requests not handled before will return our React app
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });
 
 // Listen Routine

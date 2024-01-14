@@ -32,33 +32,35 @@ function App() {
 
   return (
     <>
-    <div class="main-dash">
-
-      <div class="header-bar">
-        <div class="header"></div>
-        <div class="trello-dash">TrelloDash</div>
-        <div class="project-abcd">{!tr_title ? "No Project found!" : "Project: " + tr_title}</div>
-        <URLPostInput />
-      </div>
-
-      <div class="body-content">
-        <ProgressBlock />
-
-        <div class="mini-blocks">
-          <SPIMiniBlock />
-          <SVMiniBlock />
-          <RUMiniBlock />
+      <div class="main-dash">
+        <div class="header-bar">
+          <div class="header"></div>
+          <div class="trello-dash">TrelloDash</div>
+          <div class="project-abcd">
+            {!tr_title ? "No Project found!" : "Project: " + tr_title}
+          </div>
+          <URLPostInput />
         </div>
 
-        <MemberBlock />
-        <ZoneWrapper />
-        <TaskBlock />
+        <div class="body-content">
+          <ProgressBlock />
 
-        <div class="footer"><a href="/api-docs">visit the api documentation</a></div>
+          <div class="mini-blocks">
+            <SPIMiniBlock />
+            <SVMiniBlock />
+            <RUMiniBlock />
+          </div>
+
+          <MemberBlock />
+          <ZoneWrapper />
+          <TaskBlock />
+
+          <div class="footer">
+            <a href="/api-docs">visit the api documentation</a>
+          </div>
+        </div>
       </div>
-    </div>
     </>
-
   );
 }
 
