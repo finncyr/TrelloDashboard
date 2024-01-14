@@ -31,7 +31,7 @@
               "properties": {
                 "url": {
                   "type": "string",
-                  "example": "https://trello.com/b/W3JXKZYD/test"
+                  "example": "https://trello.com/b/W3JXKZYD/event-aufbau-messestand"
                 }
               },
               "required": [
@@ -62,6 +62,36 @@
             "schema": {
               "type": "string",
               "example": "Example Board",
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/counts/": {
+      "get": {
+        "description": "Returns a object with the amount of all, open and closed tasks on the board",
+        "responses": {
+          "200": {
+            "description": "Amount of all, open and closed tasks on the board as object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "alltasks": {
+                  "type": "number",
+                  "example": 10
+                },
+                "closedtasks": {
+                  "type": "number",
+                  "example": 4
+                },
+                "opentasks": {
+                  "type": "number",
+                  "example": 6
+                }
+              },
               "xml": {
                 "name": "main"
               }
@@ -232,6 +262,30 @@
                 "name": "main"
               }
             }
+          }
+        }
+      }
+    },
+    "/api/cards/{cardid}/{value}": {
+      "get": {
+        "description": "Returns a specific value of a card on the board",
+        "parameters": [
+          {
+            "name": "cardid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -465,15 +519,56 @@
         }
       }
     },
-    "/api/board/sv": {
+    "/api/lists/{listid}/{value}": {
       "get": {
-        "description": "Returns the average Schedule Variance per card of the whole board in remaining minutes",
+        "description": "Tries to returns a specific value of a specific list on the board",
+        "parameters": [
+          {
+            "name": "listid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Average Schedule Variance per card of the whole board in rounded remaining minutes",
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/board/ast": {
+      "get": {
+        "description": "Returns the average Slack Time per card of the whole board in remaining minutes",
+        "responses": {
+          "200": {
+            "description": "Average Slack Time per card of the whole board in rounded remaining minutes",
             "schema": {
               "type": "number",
               "example": 16,
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/board/sv": {
+      "get": {
+        "description": "Returns the summed Schedule Variance of the whole board in minutes",
+        "responses": {
+          "200": {
+            "description": "Decimal Schedule Variance of the whole board. Negative Values mean the board is behind schedule.",
+            "schema": {
+              "type": "number",
+              "example": 15,
               "xml": {
                 "name": "main"
               }
@@ -577,6 +672,30 @@
                 "name": "main"
               }
             }
+          }
+        }
+      }
+    },
+    "/api/members/{memberid}/{value}": {
+      "get": {
+        "description": "Returns a value of a specific member on the board",
+        "parameters": [
+          {
+            "name": "memberid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

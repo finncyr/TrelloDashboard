@@ -1,16 +1,15 @@
 {
   "name": "trellodashboard",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "description": "A Dashboard for real-time-projects in Trello",
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
     "build": "cd client && npm install && npm run build",
-    "bunbuild": "cd client && bun run build",
     "swagger": "node ./swagger.js"
   },
   "author": "Finn Cyriax",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "apicache": "^1.6.3",
     "cookie-parser": "^1.4.6",

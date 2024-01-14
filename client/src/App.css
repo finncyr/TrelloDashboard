@@ -1,7 +1,11 @@
+/* client/src/App.css
+ * This File delivers all static CSS Classes. */
+
 .main-dash,
 .main-dash * {
   box-sizing: border-box;
 }
+
 .main-dash {
   background: #ffffff;
   width: inherit;
@@ -11,6 +15,7 @@
   position: relative;
   overflow: auto;
 }
+
 .header-bar {
   width: 100%;
   height: 55px;
@@ -18,6 +23,7 @@
   left: 0px;
   top: 0px;
 }
+
 .header {
   background: #000000;
   width: 100%;
@@ -26,6 +32,7 @@
   left: 0px;
   top: 0px;
 }
+
 .trello-dash {
   color: #ffffff;
   text-align: left;
@@ -34,6 +41,7 @@
   left: 25px;
   top: 20px;
 }
+
 .project-abcd {
   color: #ffffff;
   text-align: left;
@@ -43,10 +51,12 @@
   top: 20px;
   transform: translate(-50%, 0)
 }
+
 .url-poster,
 .url-poster * {
   box-sizing: border-box;
 }
+
 .url-poster {
   background: #ffffff;
   border-radius: 8px;
@@ -65,12 +75,14 @@
   right: 90px;
   top: 13px;
 }
+
 .url-poster-submit {
   position: absolute;
   right: 25px;
   top: 13px;
   height: 29px;
 }
+
 .placeholder-url {
   color: #000000;
   text-align: left;
@@ -92,16 +104,16 @@
 
 .body-content {
   position: relative;
-    height: auto;
-    min-width: 1390px;
-    max-width: 1390px;
-    width: 90%;
-    left: 50%;
-    transform: translate(-50%);
-    width: 80%;
-    min-height: 720px;
-    top: 55px;
-    padding: 25px;
+  height: auto;
+  min-width: 1390px;
+  max-width: 1390px;
+  width: 90%;
+  left: 50%;
+  transform: translate(-50%);
+  width: 80%;
+  min-height: 720px;
+  top: 55px;
+  padding: 25px;
 }
 
 .progress-block {
@@ -109,6 +121,7 @@
   height: 140px;
   position: relative;
 }
+
 .rectangle-1 {
   background: #ffffff;
   border-radius: 10px;
@@ -120,6 +133,7 @@
   left: 0px;
   top: 0px;
 }
+
 .completion-of-tasks {
   color: #000000;
   text-align: left;
@@ -128,6 +142,7 @@
   left: 20px;
   top: 17px;
 }
+
 .rectangle-5 {
   background: #d9d9d9;
   border-radius: 10px;
@@ -141,6 +156,7 @@
   top: 50px;
   box-shadow: inset 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .rectangle-6 {
   background: #000000;
   border-radius: 10px;
@@ -153,6 +169,7 @@
   left: 32px;
   top: 50px;
 }
+
 ._12-23-tasks-done {
   color: #000000;
   text-align: left;
@@ -194,23 +211,27 @@
   position: relative;
   overflow: hidden;
 }
+
 .spi {
   color: #000000;
   text-align: left;
   font: 600 32px "Inter", sans-serif;
   position: relative;
 }
+
 ._1-103 {
   color: #1bae18;
   text-align: center;
   font: 600 32px "Inter", sans-serif;
   position: relative;
 }
+
 .sv-block {
   width: 132px;
   height: 150px;
   position: relative;
 }
+
 .rectangle-4 {
   background: #ffffff;
   border-radius: 10px;
@@ -223,6 +244,7 @@
   left: 0px;
   top: 0px;
 }
+
 .sv {
   color: #000000;
   text-align: center;
@@ -231,6 +253,7 @@
   width: inherit;
   top: 8px;
 }
+
 ._1-2 {
   color: #1bae18;
   text-align: center;
@@ -244,11 +267,13 @@
   align-items: center;
   align-content: center;
 }
+
 .ru-mini-block {
   width: 132px;
   height: 150px;
   position: relative;
 }
+
 .ru {
   color: #000000;
   text-align: center;
@@ -257,6 +282,7 @@
   left: calc(50% - 23px);
   top: calc(50% - 67px);
 }
+
 ._86 {
   color: #e9770f;
   text-align: center;
@@ -266,12 +292,14 @@
   top: 75px;
   width: 132px;
 }
+
 .vector {
   position: absolute;
   left: 55px;
   top: 120px;
   overflow: visible;
 }
+
 .members {
   width: 433px;
   height: auto;
@@ -279,6 +307,7 @@
   position: relative;
   top: 40px;
 }
+
 .rectangle-2 {
   background: #ffffff;
   border-radius: 10px;
@@ -291,6 +320,7 @@
   left: 0px;
   top: 0px;
 }
+
 .member-title {
   color: #000000;
   text-align: left;
@@ -299,12 +329,14 @@
   left: 20px;
   top: 18px;
 }
+
 .member-list {
   width: 393px;
   left: 20px;
   display: table;
   position: relative;
 }
+
 .tablewrapper {
   overflow: auto;
   top: 28px;
@@ -326,9 +358,10 @@
   height: fit-content;
   text-decoration: underline;
 }
+
 .tablebody {
-    overflow-y: auto;
-    overflow-x: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .member {
@@ -361,6 +394,7 @@
   left: 478px;
   top: 25px;
 }
+
 .border {
   background: #ffffff;
   border-radius: 10px;
@@ -373,6 +407,7 @@
   left: 0px;
   top: 0px;
 }
+
 .zones {
   color: #000000;
   text-align: left;
@@ -381,7 +416,9 @@
   left: 30px;
   top: 21px;
 }
-.property-1-a, .zones2 {
+
+.property-1-a,
+.zones2 {
   align-items: center;
   display: flex;
   overflow: auto;
@@ -392,12 +429,14 @@
   justify-content: space-evenly;
   align-content: flex-start;
 }
+
 .zones2 {
   height: 300px;
   top: 46px;
   width: 882px;
   left: 2px;
 }
+
 .property-1-a {
   background: #d9d9d9;
   border-radius: 10px;
@@ -407,18 +446,21 @@
   overflow: hidden;
   padding: 10px 21px 15px;
 }
+
 .zone-a {
   color: #000000;
   text-align: left;
   font: 600 15px "Inter", sans-serif;
   position: relative;
 }
+
 .progress-bar {
   flex-shrink: 0;
   width: 215px;
   height: 41px;
   position: static;
 }
+
 .rectangle-52 {
   background: #d9d9d9;
   border-radius: 10px;
@@ -432,6 +474,7 @@
   top: 43px;
   box-shadow: inset 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .rectangle-62 {
   background: #000000;
   border-radius: 10px;
@@ -444,6 +487,7 @@
   left: 21px;
   top: 43px;
 }
+
 ._5-9 {
   color: #ffffff;
   text-align: center;
@@ -451,6 +495,7 @@
   position: relative;
   top: 25%;
 }
+
 ._5-9-empty {
   position: absolute;
   left: 95px;
@@ -472,6 +517,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .ellipse-1 {
   border-radius: 50%;
   width: 46.62px;
@@ -479,6 +525,7 @@
   position: relative;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .ellipse-2 {
   border-radius: 50%;
   width: 46.62px;
@@ -488,6 +535,7 @@
   top: 99px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .ellipse-3 {
   border-radius: 50%;
   width: 46.62px;
@@ -497,6 +545,7 @@
   top: 99px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .ellipse-4 {
   border-radius: 50%;
   width: 46.62px;
@@ -506,12 +555,14 @@
   top: 99px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .critical-task {
   flex-shrink: 0;
   width: 212px;
   height: 38px;
   position: static;
 }
+
 .rectangle-11 {
   background: #e51d1d;
   border-radius: 10px;
@@ -521,6 +572,7 @@
   left: 22.5px;
   top: 160.62px;
 }
+
 ._1-critical-task-open {
   color: #ffffff;
   text-align: left;
@@ -529,18 +581,21 @@
   left: 79.5px;
   top: 170.62px;
 }
+
 .vector4 {
   position: absolute;
   left: 33.5px;
   top: 170.62px;
   overflow: visible;
 }
+
 .on-time {
   flex-shrink: 0;
   width: 212px;
   height: 38px;
   position: static;
 }
+
 .rectangle-112 {
   background: #2a7e15;
   border-radius: 10px;
@@ -550,6 +605,7 @@
   left: 22.5px;
   top: 213.62px;
 }
+
 .tasks-on-time {
   color: #ffffff;
   text-align: center;
@@ -558,12 +614,14 @@
   left: calc(50% - 49px);
   top: 223.62px;
 }
+
 .vector5 {
   position: absolute;
   left: 33.5px;
   top: 222.62px;
   overflow: visible;
 }
+
 .property-1-b {
   background: #d9d9d9;
   border-radius: 10px;
@@ -576,12 +634,14 @@
   position: relative;
   overflow: hidden;
 }
+
 .zone-b {
   color: #000000;
   text-align: left;
   font: 600 15px "Inter", sans-serif;
   position: relative;
 }
+
 ._4-8 {
   color: #ffffff;
   text-align: left;
@@ -590,12 +650,14 @@
   left: 67px;
   top: 54px;
 }
+
 .people2 {
   flex-shrink: 0;
   width: 158.87px;
   height: 46.62px;
   position: static;
 }
+
 .ellipse-12 {
   border-radius: 50%;
   width: 46.62px;
@@ -605,6 +667,7 @@
   top: 99px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .ellipse-22 {
   border-radius: 50%;
   width: 46.62px;
@@ -614,6 +677,7 @@
   top: 99px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .ellipse-32 {
   border-radius: 50%;
   width: 46.62px;
@@ -623,6 +687,7 @@
   top: 99px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .rectangle-113 {
   background: #2a7e15;
   border-radius: 10px;
@@ -632,6 +697,7 @@
   left: 22.5px;
   top: 160.62px;
 }
+
 .rectangle-113-2 {
   background: #1e748f;
   border-radius: 10px;
@@ -641,6 +707,7 @@
   left: 22.5px;
   top: 160.62px;
 }
+
 .critical-tasks-done {
   color: #ffffff;
   text-align: left;
@@ -649,18 +716,21 @@
   left: 79.5px;
   top: 170.62px;
 }
+
 .vector6 {
   position: absolute;
   left: 33.5px;
   top: 170.62px;
   overflow: visible;
 }
+
 .vector7 {
   position: absolute;
   left: 33.5px;
   top: 222.62px;
   overflow: visible;
 }
+
 .property-1-c {
   background: #d9d9d9;
   border-radius: 10px;
@@ -673,12 +743,14 @@
   position: relative;
   overflow: hidden;
 }
+
 .zone-c {
   color: #000000;
   text-align: left;
   font: 600 15px "Inter", sans-serif;
   position: relative;
 }
+
 .rectangle-63 {
   background: #000000;
   border-radius: 10px;
@@ -691,6 +763,7 @@
   left: 21px;
   top: 43px;
 }
+
 ._3-6 {
   color: #ffffff;
   text-align: left;
@@ -699,12 +772,14 @@
   left: 63px;
   top: 54px;
 }
+
 .people3 {
   flex-shrink: 0;
   width: 102.74px;
   height: 46.62px;
   position: static;
 }
+
 .ellipse-13 {
   border-radius: 50%;
   width: 46.62px;
@@ -714,6 +789,7 @@
   top: 99px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .ellipse-23 {
   border-radius: 50%;
   width: 46.62px;
@@ -723,6 +799,7 @@
   top: 99px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 ._1-critical-task-open2 {
   color: #ffffff;
   text-align: left;
@@ -731,12 +808,14 @@
   left: 68px;
   top: 171px;
 }
+
 .vector8 {
   position: absolute;
   left: 33.5px;
   top: 170.62px;
   overflow: visible;
 }
+
 .rectangle-114 {
   background: #e9770f;
   border-radius: 10px;
@@ -746,6 +825,7 @@
   left: 22.5px;
   top: 213.62px;
 }
+
 .task-behind-schedule {
   color: #ffffff;
   text-align: center;
@@ -754,12 +834,14 @@
   left: calc(50% - 60.5px);
   top: 224px;
 }
+
 .vector9 {
   position: absolute;
   left: 33.5px;
   top: 222.62px;
   overflow: visible;
 }
+
 .tasks {
   height: 253px;
   left: 478px;
@@ -772,6 +854,7 @@
   border-color: #000000;
   border-width: 3px;
 }
+
 .rectangle-3 {
   width: 881px;
   height: 170px;
@@ -792,6 +875,7 @@
   left: 30px;
   top: 16px;
 }
+
 .task-2 {
   background: #a1cea5;
   border-radius: 10px;
@@ -803,6 +887,7 @@
   top: 91px;
   overflow: hidden;
 }
+
 .aufgabe-1-2-testbeschreibung {
   color: #000000;
   text-align: left;
@@ -815,6 +900,7 @@
   align-items: center;
   justify-content: flex-start;
 }
+
 .frame-1 {
   display: flex;
   flex-direction: row;
@@ -826,6 +912,7 @@
   left: 463px;
   top: 8px;
 }
+
 .ellipse-14 {
   border-radius: 50%;
   flex-shrink: 0;
@@ -834,6 +921,7 @@
   position: relative;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .zone-label {
   background: #868686;
   border-radius: 15px;
@@ -850,12 +938,14 @@
   position: relative;
   overflow: hidden;
 }
+
 .zone-a2 {
   color: #ffffff;
   text-align: left;
   font: 500 11px "Inter", sans-serif;
   position: relative;
 }
+
 .label-b {
   background: #868686;
   border-radius: 15px;
@@ -872,6 +962,7 @@
   position: relative;
   overflow: hidden;
 }
+
 .due-in-10-minutes {
   color: #ffffff;
   text-align: left;
@@ -890,6 +981,7 @@
   overflow: hidden;
   min-height: 34px;
 }
+
 .aufgabe-1-1-testbeschreibung {
   color: #000000;
   text-align: left;
@@ -901,6 +993,7 @@
   align-items: center;
   justify-content: flex-start;
 }
+
 .frame-2 {
   width: 339px;
   height: 20px;
@@ -908,6 +1001,7 @@
   left: 463px;
   top: 7px;
 }
+
 .ellipse-15-group {
   align-items: center;
   display: flex;
@@ -931,6 +1025,7 @@
   top: 0px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .zone-label2 {
   background: #868686;
   border-radius: 15px;
@@ -948,6 +1043,7 @@
   top: 1px;
   overflow: hidden;
 }
+
 .label-b2 {
   background: #868686;
   border-radius: 15px;
@@ -965,12 +1061,14 @@
   top: 0.5px;
   overflow: hidden;
 }
+
 .due-in-2-hours {
   color: #ffffff;
   text-align: left;
   font: 500 11px "Inter", sans-serif;
   position: relative;
 }
+
 .vector10 {
   position: absolute;
   left: 432px;
@@ -991,7 +1089,8 @@
   align-items: center;
   height: 40px;
 }
-.footer a{
+
+.footer a {
   color: #626262;
   text-align: center;
   font: 200 15px "Inter", sans-serif;
