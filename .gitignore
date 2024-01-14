@@ -1,12 +1,11 @@
+# custom changes
 node_modules
 client/node_modules
 client/build
 *.env
-readme.txt
+liesmich.md
+liesmich.pdf
 server/node.exe
-
-# Created by https://www.toptal.com/developers/gitignore/api/node,react
-# Edit at https://www.toptal.com/developers/gitignore?templates=node,react
 
 ### Node ###
 # Logs
@@ -161,4 +160,4 @@ psd
 thumb
 sketch
 
-# End of https://www.toptal.com/developers/gitignore/api/node,react
+# End of File

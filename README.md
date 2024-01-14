@@ -1,6 +1,6 @@
 # TrelloDashboard
 
-![Preview of App](https://i.postimg.cc/hj8vqvVg/image-5.png)
+![Preview of App](https://i.postimg.cc/xd5YYPbs/screenshot.png)
 
 Trello Extension Dashboard for time-critical Project and Time-Management
 
@@ -51,6 +51,9 @@ $ npm run build && npm run start
 
 <details>
     <summary>Earlier stages</summary> 
+
+#### v1.0.0
+![Version 1.0.0](https://i.postimg.cc/hj8vqvVg/image-5.png)
 
 #### v0.6.0
 ![Version 0.6.0](https://i.postimg.cc/nhsLh0q3/image-4.png)

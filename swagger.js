@@ -4,7 +4,7 @@ const doc = {
   info: {
     title: 'TrelloDash API',
     description: 'Trello-API-Extension for the TrelloDashboard',
-    version: '1.0.1',
+    version: '1.3.0',
   },
   host: 'localhost:3001',
   consumes: [],             // by default: ['application/json']
