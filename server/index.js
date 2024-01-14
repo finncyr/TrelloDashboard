@@ -603,42 +603,6 @@ app.get("/api/lists/:listid/:value", async (req, res, next) => {
 
 // ---- BOARD ----
 
-app.get("/api/board/ast", async (req, res, next) => {
-  // #swagger.description = 'Returns the average Slack Time per card of the whole board in remaining minutes'
-  /* #swagger.responses[200] = {
-            description: 'Average Slack Time per card of the whole board in rounded remaining minutes',
-            schema: 16
-    } */
-  if (!req.cookies.boardid) {
-    res.json(0);
-    return;
-  }
-  const [durations, alllists, cards] = await Promise.all([
-    trello.getLabelsForBoard(req.cookies.boardid),
-    trello.getListsOnBoard(req.cookies.boardid),
-    trello.getCardsOnBoard(req.cookies.boardid)
-  ]).catch((err) => next(err));
-  var st = 0;
-  const infolist = alllists.filter(function (el) {
-    return el.name == "INFO";
-  });
-  const infolistid = infolist[0]['id']; //get id of info list
-  cards.forEach(el => {
-    if (el['idList'] != infolistid && !el['dueComplete'] && el['due'] != null) { //ignore cards in info list and done cards
-      var cardduaration = 0;
-      for (var label of el['labels']) {
-        const dur_label = durations.filter(function (duration) { //get duration of card by label
-          return duration['id'] == label['id'];
-        });
-        cardduaration = parseInt(dur_label[0]['name']);
-        break;
-      }
-      st += (Date.parse(el['due']) - cardduaration * 60000) - Date.now(); //calculate st
-    }
-  });
-  res.json(Math.round((st / 60000) / cards.length)); //return average st in minutes
-});
-
 app.get("/api/board/sv", async (req, res, next) => {
   // #swagger.description = 'Returns the summed Schedule Variance of the whole board in minutes'
   /* #swagger.responses[200] = {
