@@ -10,8 +10,9 @@
  */
 
 import React from "react";
-import ProgressBlock from "./components/ProgressBlock.js";
 import "./App.css";
+
+import ProgressBlock from "./components/ProgressBlock.js";
 import URLPostInput from "./components/URLPostInput.js";
 import SPIMiniBlock from "./components/SPIMiniBlock.js";
 import SVMiniBlock from "./components/SVMiniBlock.js";
